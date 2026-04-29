@@ -11,11 +11,14 @@ import {
 } from '@angular/core';
 
 import {
+  CertificateItem,
   ExperienceItem,
   FloatingNavItem,
+  LanguageCertificate,
   ProfileMode,
   ProfileTag,
   ProjectCategory,
+  ResearchItem,
   portfolioData,
 } from './portfolio.data';
 
@@ -67,6 +70,15 @@ export class App implements AfterViewInit {
     this.data.certificates.filter((item) => this.matchesProfile(item.tag)),
   );
 
+  protected readonly languageCertificates = computed(() =>
+    this.data.languages.flatMap((language) =>
+      (language.certificates ?? []).map((certificate) => ({
+        ...certificate,
+        language: language.name,
+      })),
+    ),
+  );
+
   protected readonly certificatePages = computed(() => {
     const total = this.visibleCertificates().length;
     return Array.from(
@@ -77,6 +89,10 @@ export class App implements AfterViewInit {
 
   protected readonly visibleProjects = computed(() =>
     this.data.projects.filter((item) => this.matchesProfile(item.tag)),
+  );
+
+  protected readonly visibleResearch = computed<ResearchItem[]>(() =>
+    this.data.research.filter((item) => this.matchesProfile(item.tag)),
   );
 
   protected readonly visibleExperience = computed(() =>
@@ -141,6 +157,14 @@ export class App implements AfterViewInit {
     }
 
     return activeId === id;
+  }
+
+  protected certificateImageSrc(item: CertificateItem | LanguageCertificate): string {
+    return `${item.assetBase}.png`;
+  }
+
+  protected certificatePdfHref(item: CertificateItem | LanguageCertificate): string {
+    return `${item.assetBase}.pdf`;
   }
 
   protected toggleMobileMenu(): void {

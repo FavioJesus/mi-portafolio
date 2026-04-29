@@ -218,18 +218,25 @@
               @for (item of visibleCertificates(); track item.title + item.issuer) {
                 <article class="certificate-card">
                   <div class="certificate-card__image-wrap">
-                    <img class="certificate-card__image" [src]="item.image.src" [alt]="item.image.alt" />
+                    <img
+                      class="certificate-card__image"
+                      [src]="certificateImageSrc(item)"
+                      [alt]="item.alt"
+                    />
                   </div>
 
                   <div class="certificate-card__body">
                     <p class="certificate-card__meta">{{ item.issuer }} / {{ item.issued }}</p>
                     <h3>{{ item.title }}</h3>
 
-                    @if (item.link) {
-                      <a class="certificate-card__link" [href]="item.link" target="_blank" rel="noreferrer">
-                        {{ item.linkLabel || 'Ver certificado' }}
-                      </a>
-                    }
+                    <a
+                      class="certificate-card__link"
+                      [href]="certificatePdfHref(item)"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {{ item.linkLabel || 'Descargar certificado' }}
+                    </a>
                   </div>
                 </article>
               }
@@ -268,17 +275,37 @@
           <p>{{ currentVariant().languagesText }}</p>
         </div>
 
-        <div class="languages-grid">
-          @for (language of data.languages; track language.name) {
-            <article class="language-card">
-              <div class="language-card__head">
-                <span>{{ language.level }}</span>
-                <strong>{{ language.name }}</strong>
-              </div>
-              <p>{{ language.context }}</p>
-            </article>
-          }
-        </div>
+        @if (languageCertificates().length) {
+          <div class="language-certificates-grid" data-reveal>
+            @for (certificate of languageCertificates(); track certificate.title) {
+              <article class="certificate-card certificate-card--language">
+                <div class="certificate-card__image-wrap">
+                  <img
+                    class="certificate-card__image"
+                    [src]="certificateImageSrc(certificate)"
+                    [alt]="certificate.alt"
+                  />
+                </div>
+
+                <div class="certificate-card__body">
+                  <p class="certificate-card__meta">
+                    {{ certificate.language }} / {{ certificate.issuer }} / {{ certificate.issued }}
+                  </p>
+                  <h3>{{ certificate.title }}</h3>
+
+                  <a
+                    class="certificate-card__link"
+                    [href]="certificatePdfHref(certificate)"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {{ certificate.linkLabel || 'Descargar certificado' }}
+                  </a>
+                </div>
+              </article>
+            }
+          </div>
+        }
       </section>
     }
 
@@ -338,6 +365,51 @@
       </section>
     }
 
+    @if (data.sections.research.visible) {
+      <section class="section section-panel section-panel--bright" id="research" data-reveal>
+        <div class="section-heading">
+          <p class="section-kicker">{{ data.sections.research.kicker }}</p>
+          <h2>Investigacion y publicaciones.</h2>
+          <p>
+            Articulos publicados y trabajos de investigacion separados de los proyectos de desarrollo
+            para mostrar su alcance academico y tecnico.
+          </p>
+        </div>
+
+        <div class="projects-grid">
+          @for (item of visibleResearch(); track item.title) {
+            <article class="project-card" data-reveal>
+              <div class="project-card__screen">
+                @if (item.image; as researchImage) {
+                  <img
+                    class="project-card__image"
+                    [src]="researchImage.src"
+                    [alt]="researchImage.alt"
+                  />
+                }
+
+                <span>Investigacion</span>
+                <strong>{{ item.year }}</strong>
+              </div>
+
+              <div class="project-card__body">
+                <h3>{{ item.title }}</h3>
+                <p>{{ item.summary }}</p>
+
+                <div class="tag-list">
+                  @for (tag of item.stack; track tag) {
+                    <span>{{ tag }}</span>
+                  }
+                </div>
+
+                <a [href]="item.link" target="_blank" rel="noreferrer">{{ item.linkLabel }}</a>
+              </div>
+            </article>
+          }
+        </div>
+      </section>
+    }
+
     @if (data.sections.experience.visible) {
       <section class="section section-panel section-panel--deep" id="experience" data-reveal>
         <div class="section-heading">
@@ -359,7 +431,18 @@
                 (click)="toggleExperience(item.id)"
                 [attr.aria-expanded]="isExperienceOpen(item.id, index)"
               >
-                <span class="experience-entry__title">{{ item.role }} @ {{ item.company }}</span>
+                <span class="experience-entry__identity">
+                  @if (item.logo; as logo) {
+                    <span class="experience-entry__logo">
+                      <img [src]="logo.src" [alt]="logo.alt" />
+                    </span>
+                  }
+
+                  <span class="experience-entry__title">
+                    <strong>{{ item.role }}</strong>
+                    <small>{{ item.company }}</small>
+                  </span>
+                </span>
                 <span class="experience-entry__period">{{ item.period }}</span>
                 <span class="experience-entry__toggle">
                   {{ isExperienceOpen(item.id, index) ? '-' : '+' }}
@@ -368,24 +451,34 @@
 
               @if (isExperienceOpen(item.id, index)) {
                 <div class="experience-entry__panel">
-                  <div class="experience-entry__meta">
-                    <span>{{ item.location }}</span>
-                    <a [href]="item.website" target="_blank" rel="noreferrer">
-                      {{ item.websiteLabel }}
-                    </a>
-                  </div>
+                  <div class="experience-entry__content">
+                    <div class="experience-entry__details">
+                      <div class="experience-entry__meta">
+                        <span>{{ item.location }}</span>
+                        <a [href]="item.website" target="_blank" rel="noreferrer">
+                          {{ item.websiteLabel }}
+                        </a>
+                      </div>
 
-                  <p class="experience-entry__text">{{ item.summary }}</p>
+                      <p class="experience-entry__text">{{ item.summary }}</p>
 
-                  <ul class="experience-entry__list">
-                    @for (achievement of item.achievements; track achievement) {
-                      <li>{{ achievement }}</li>
-                    }
-                  </ul>
+                      <ul class="experience-entry__list">
+                        @for (achievement of item.achievements; track achievement) {
+                          <li>{{ achievement }}</li>
+                        }
+                      </ul>
 
-                  <div class="tag-list">
-                    @for (tag of item.stack; track tag) {
-                      <span>{{ tag }}</span>
+                      <div class="tag-list">
+                        @for (tag of item.stack; track tag) {
+                          <span>{{ tag }}</span>
+                        }
+                      </div>
+                    </div>
+
+                    @if (item.logo; as logo) {
+                      <aside class="experience-entry__brand" aria-hidden="true">
+                        <img [src]="logo.src" [alt]="logo.alt" />
+                      </aside>
                     }
                   </div>
                 </div>

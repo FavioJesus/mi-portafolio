@@ -6,6 +6,7 @@ export type SectionId =
   | 'certificates'
   | 'languages'
   | 'projects'
+  | 'research'
   | 'experience'
   | 'contact';
 
@@ -46,8 +47,17 @@ export interface CertificateItem extends TaggedContent {
   title: string;
   issuer: string;
   issued: string;
-  image: ImageAsset;
-  link?: string;
+  assetBase: string;
+  alt: string;
+  linkLabel?: string;
+}
+
+export interface LanguageCertificate {
+  title: string;
+  issuer: string;
+  issued: string;
+  assetBase: string;
+  alt: string;
   linkLabel?: string;
 }
 
@@ -55,6 +65,7 @@ export interface LanguageItem {
   name: string;
   level: string;
   context: string;
+  certificates?: LanguageCertificate[];
 }
 
 export interface ProjectItem extends TaggedContent {
@@ -68,10 +79,21 @@ export interface ProjectItem extends TaggedContent {
   image?: ImageAsset;
 }
 
+export interface ResearchItem extends TaggedContent {
+  title: string;
+  year: string;
+  summary: string;
+  stack: string[];
+  linkLabel: string;
+  link: string;
+  image?: ImageAsset;
+}
+
 export interface ExperienceItem extends TaggedContent {
   id: string;
   role: string;
   company: string;
+  logo?: ImageAsset;
   period: string;
   location: string;
   websiteLabel: string;
@@ -125,380 +147,605 @@ export const portfolioData = {
       kicker: '03 / Proyectos',
       visible: true,
     },
+    research: {
+      id: 'research',
+      navLabel: 'Investigacion',
+      kicker: '04 / Investigacion',
+      visible: true,
+    },
     experience: {
       id: 'experience',
       navLabel: 'Experiencia',
-      kicker: '04 / Experiencia',
+      kicker: '05 / Experiencia',
       visible: true,
     },
     contact: {
       id: 'contact',
       navLabel: 'Contacto',
-      kicker: '05 / Contacto',
+      kicker: '06 / Contacto',
       visible: true,
     },
   } satisfies Record<SectionId, SectionConfig>,
   profile: {
-    name: 'Tu Nombre',
-    location: 'Peru',
+    name: 'Favio Jesus Guevara Puente',
+    location: 'Lima, Peru',
     photo: {
-      src: '/assets/profile/tu-foto.jpg',
-      alt: 'Retrato profesional de Tu Nombre',
+      src: '/assets/profile/favio-guevara.jpg',
+      alt: 'Foto profesional de Favio Jesus Guevara Puente',
     },
     resumeLabel: 'Ver experiencia',
     resumeLink: '#experience',
     contactLabel: 'Contactame',
     contactLink: '#contact',
-    email: 'tunombre@email.com',
+    email: 'faviogpfk@gmail.com',
   },
   variants: {
     SOFTWARE: {
       mode: 'SOFTWARE',
       switchLabel: 'Software Development',
-      eyebrow: 'Software engineer / web development profile',
-      role: 'Ingeniero Informatico y Desarrollador de Software',
+      eyebrow: 'Full stack developer / software engineering profile',
+      role: 'Desarrollador Full Stack',
       tagline:
-        'Construyo productos web modernos, interfaces claras y experiencias digitales pensadas para escalar sin complejidad innecesaria.',
-      availability: 'Disponible para productos web, frontend architecture y desarrollo full stack ligero.',
+        'Desarrollador especializado en aplicaciones web, APIs, bases de datos y soluciones empresariales con Angular, .NET, Spring Boot, SQL Server, PostgreSQL y Oracle.',
+      availability:
+        'Disponible para desarrollo web, backend, integracion de APIs y mantenimiento evolutivo de sistemas.',
       floatingNav: [
         { code: 'fn', label: 'home()', target: 'home' },
         { code: 'cert', label: 'certificates', target: 'certificates' },
         { code: 'lang', label: 'languages', target: 'languages' },
         { code: 'map', label: 'projects', target: 'projects' },
+        { code: 'pub', label: 'research', target: 'research' },
         { code: 'log', label: 'experience', target: 'experience' },
         { code: 'open', label: 'contact', target: 'contact' },
       ],
       heroCode: [
-        'const engineer = {',
-        "specialty: 'web development',",
-        "focus: 'frontend, architecture, ux',",
-        "stack: ['Angular', 'TS', 'Node'],",
-        "mode: 'clean, scalable, maintainable'",
+        'const favio = {',
+        "role: 'Full Stack Developer',",
+        "frontend: ['Angular', 'TypeScript'],",
+        "backend: ['.NET', 'Spring Boot'],",
+        "db: ['SQL Server', 'PostgreSQL', 'Oracle']",
         '}',
       ],
       certificatesTitle: 'Certificaciones orientadas a software.',
       certificatesText:
-        'Aqui puedes mostrar cursos, especializaciones y certificados relacionados con desarrollo web, frontend, arquitectura o herramientas de software.',
-      projectsTitle: 'Productos y soluciones web filtradas por perfil.',
+        'Formacion en desarrollo full stack, arquitectura basada en microservicios, Angular, .NET, PHP y practicas de construccion de sistemas empresariales.',
+      projectsTitle: 'Aplicaciones, APIs y soluciones web.',
       languagesTitle: 'Idiomas para colaborar en entornos tecnicos.',
       languagesText:
-        'Un resumen claro de los idiomas que manejas para documentacion, reuniones, lectura tecnica o colaboracion internacional.',
-      experienceTitle: 'Experiencia enfocada en desarrollo web.',
+        'Capacidad para trabajar con documentacion tecnica, equipos multidisciplinarios y comunicacion profesional en espanol, ingles y portugues.',
+      experienceTitle: 'Experiencia enfocada en desarrollo de software.',
       experienceText:
-        'Este modo prioriza roles, proyectos y stack asociados a construccion de productos, interfaces y arquitectura de software.',
+        'Este modo prioriza aplicaciones web, frontend, backend, APIs, bases de datos, integraciones y mantenimiento evolutivo de sistemas.',
     },
     BIGDATA: {
       mode: 'BIGDATA',
       switchLabel: 'Big Data',
-      eyebrow: 'Data engineer / analytics and big data profile',
-      role: 'Ingeniero Informatico enfocado en Big Data y Analitica',
+      eyebrow: 'BI analyst / data and analytics profile',
+      role: 'Analista BI y Data',
       tagline:
-        'Trabajo con pipelines, integracion de datos, procesamiento analitico y visualizacion para convertir informacion en decisiones.',
-      availability: 'Disponible para pipelines, analitica, reporting y plataformas de datos.',
+        'Profesional con experiencia en migracion de datos, SQL, PowerBI, Looker Studio, analisis de datos, reporting y automatizacion de procesos.',
+      availability:
+        'Disponible para BI, dashboards, ETL, reporting, analisis de datos y optimizacion de consultas.',
       floatingNav: [
         { code: 'sql', label: 'select home', target: 'home' },
         { code: 'cert', label: 'certificates', target: 'certificates' },
         { code: 'lang', label: 'languages', target: 'languages' },
         { code: 'scan', label: 'projects', target: 'projects' },
+        { code: 'pub', label: 'research', target: 'research' },
         { code: 'agg', label: 'experience', target: 'experience' },
         { code: 'open', label: 'contact', target: 'contact' },
       ],
       heroCode: [
-        'SELECT profile FROM engineer',
-        "WHERE focus = 'big_data';",
-        '-- pipelines, analytics, dashboards',
-        '-- Python, SQL, ETL, BI',
-        '-- insights, quality, scalability',
+        'SELECT profile FROM favio',
+        "WHERE focus IN ('BI', 'Data');",
+        '-- SQL Server, PostgreSQL, Oracle',
+        '-- PowerBI, Looker Studio, reporting',
+        '-- ETL, analytics, automation',
       ],
-      certificatesTitle: 'Certificaciones orientadas a datos y analitica.',
+      certificatesTitle: 'Certificaciones orientadas a datos y BI.',
       certificatesText:
-        'Aqui puedes mostrar cursos, diplomados o certificaciones vinculadas a analitica, BI, ETL, datos o plataformas de informacion.',
-      projectsTitle: 'Casos y activos relacionados con datos.',
+        'Formacion en SQL Server, Oracle PL/SQL, PowerBI, Business Analytics, Python aplicado a Data Science y administracion de bases de datos.',
+      projectsTitle: 'Casos de BI, datos e ingenieria de datos.',
       languagesTitle: 'Idiomas para analisis, reportes y trabajo colaborativo.',
       languagesText:
-        'Esta seccion permanece visible en cualquier perfil para mostrar capacidades de comunicacion en contextos profesionales y tecnicos.',
+        'Idiomas utiles para lectura tecnica, documentacion, presentaciones y colaboracion con equipos o fuentes internacionales.',
       experienceTitle: 'Experiencia enfocada en datos y analitica.',
       experienceText:
-        'Este modo prioriza los bloques vinculados a reporting, procesamiento de datos, automatizacion y visualizacion.',
+        'Este modo prioriza migracion de datos, SQL, dashboards, automatizacion, reporting, BI y analisis para toma de decisiones.',
     },
   } satisfies Record<ProfileMode, ProfileVariant>,
   stats: [
-    { value: '5+', label: 'anos construyendo software', tag: 'SOFTWARE' },
-    { value: '8+', label: 'pipelines y tableros analiticos', tag: 'BIGDATA' },
-    { value: '12', label: 'proyectos listos para produccion', tag: 'BOTH' },
-    { value: '100%', label: 'frontend estatico y veloz', tag: 'SOFTWARE' },
-    { value: '24/7', label: 'observacion de metricas criticas', tag: 'BIGDATA' },
+    { value: '6+', label: 'anos de experiencia en desarrollo y datos', tag: 'BOTH' },
+    { value: '6+', label: 'aplicativos web implementados o mantenidos', tag: 'SOFTWARE' },
+    { value: '2', label: 'articulos de investigacion publicados en IEEE', tag: 'BIGDATA' },
+    { value: '10+', label: 'certificaciones y cursos tecnicos', tag: 'BOTH' },
   ] satisfies StatItem[],
   certificates: [
     {
-      title: 'Certificacion en Desarrollo Frontend',
-      issuer: 'Plataforma / Institucion',
-      issued: '2026',
-      image: {
-        src: '/assets/certificates/frontend-certificado.jpg',
-        alt: 'Certificado de desarrollo frontend',
-      },
-      link: 'https://drive.google.com/',
-      linkLabel: 'Ver certificado',
-      tag: 'SOFTWARE',
-    },
-    {
-      title: 'Curso avanzado de Angular',
-      issuer: 'Plataforma / Institucion',
-      issued: '2025',
-      image: {
-        src: '/assets/certificates/angular-avanzado.jpg',
-        alt: 'Certificado de curso avanzado de Angular',
-      },
-      link: 'https://drive.google.com/',
-      linkLabel: 'Abrir diploma',
-      tag: 'SOFTWARE',
-    },
-    {
-      title: 'Especializacion en UX para productos digitales',
-      issuer: 'Plataforma / Institucion',
-      issued: '2025',
-      image: {
-        src: '/assets/certificates/ux-productos.jpg',
-        alt: 'Certificado de UX para productos digitales',
-      },
-      tag: 'SOFTWARE',
-    },
-    {
-      title: 'Certificacion en Analitica o BI',
-      issuer: 'Plataforma / Institucion',
-      issued: '2025',
-      image: {
-        src: '/assets/certificates/analytics-certificado.jpg',
-        alt: 'Certificado de analitica o business intelligence',
-      },
-      link: 'https://drive.google.com/',
-      linkLabel: 'Descargar',
-      tag: 'BIGDATA',
-    },
-    {
-      title: 'Curso de SQL para analisis de datos',
-      issuer: 'Plataforma / Institucion',
-      issued: '2024',
-      image: {
-        src: '/assets/certificates/sql-analisis.jpg',
-        alt: 'Certificado de SQL para analisis de datos',
-      },
-      link: 'https://drive.google.com/',
-      linkLabel: 'Ver constancia',
-      tag: 'BIGDATA',
-    },
-    {
-      title: 'Especializacion en Power BI',
-      issuer: 'Plataforma / Institucion',
-      issued: '2024',
-      image: {
-        src: '/assets/certificates/powerbi-especializacion.jpg',
-        alt: 'Certificado de especializacion en Power BI',
-      },
-      tag: 'BIGDATA',
-    },
-    {
-      title: 'Certificado transversal de tecnologia',
-      issuer: 'Plataforma / Institucion',
-      issued: '2024',
-      image: {
-        src: '/assets/certificates/general-certificado.jpg',
-        alt: 'Certificado general de tecnologia',
-      },
-      tag: 'BOTH',
-    },
-    {
-      title: 'Fundamentos de cloud computing',
-      issuer: 'Plataforma / Institucion',
-      issued: '2023',
-      image: {
-        src: '/assets/certificates/cloud-fundamentos.jpg',
-        alt: 'Certificado de fundamentos de cloud computing',
-      },
-      link: 'https://drive.google.com/',
+      title: 'Titulo en Ingenieria Informatica',
+      issuer: 'Universidad Nacional Federico Villarreal',
+      issued: '30/06/2025',
+      assetBase: '/assets/certificates/TITULO_GUEVARA_PUENTE_FAVIO_JESUS',
+      alt: 'Titulo en Ingenieria Informatica',
       linkLabel: 'Ver certificado',
       tag: 'BOTH',
     },
     {
-      title: 'Buenas practicas de Git y trabajo colaborativo',
-      issuer: 'Plataforma / Institucion',
-      issued: '2023',
-      image: {
-        src: '/assets/certificates/git-colaboracion.jpg',
-        alt: 'Certificado de Git y trabajo colaborativo',
-      },
+      title: 'Administrador de Base de Datos SQL Server',
+      issuer: 'Universidad Nacional de Ingenieria',
+      issued: '01/05/2021 - 01/12/2021',
+      assetBase: '/assets/certificates/Certificado-SQL_ADMINISTRATOR',
+      alt: 'Certificado de administrador de base de datos SQL Server',
+      linkLabel: 'Ver certificado',
       tag: 'BOTH',
+    },
+    {
+      title: 'Programador Excel VBA',
+      issuer: 'Universidad Nacional de Ingenieria',
+      issued: '01/04/2018 - 01/09/2018',
+      assetBase: '/assets/certificates/CEPS_UNI-PROGRAMADOR_EXCEL_VBA-GUEVARA_PUENTE',
+      alt: 'Certificado de programador Excel VBA',
+      linkLabel: 'Ver certificado',
+      tag: 'BOTH',
+    },
+    {
+      title: 'Oracle 12C: PL/SQL Developer',
+      issuer: 'Instituto de Educacion Superior Cibertec',
+      issued: '15/05/2021 - 21/09/2021',
+      assetBase: '/assets/certificates/CERTIFICADO_202102-ORACLE_12C_PL_SQL',
+      alt: 'Certificado Oracle 12C PL SQL Developer',
+      linkLabel: 'Ver certificado',
+      tag: 'BOTH',
+    },
+    {
+      title: 'Data Science',
+      issuer: 'CoderHouse',
+      issued: '01/04/2022 - 20/08/2022',
+      assetBase: '/assets/certificates/CERTIFICADO_DATA_SCIENCE_CODERHOUSE_GUEVARA_PUENTE',
+      alt: 'Certificado Data Science',
+      linkLabel: 'Ver certificado',
+      tag: 'BIGDATA',
+    },
+    {
+      title: 'Data Studio',
+      issuer: 'CoderHouse',
+      issued: '15/01/2022 - 13/06/2022',
+      assetBase: '/assets/certificates/Certificado-DataStudio_Guevara_Puente',
+      alt: 'Certificado Data Science',
+      linkLabel: 'Ver certificado',
+      tag: 'BIGDATA',
+    },
+    {
+      title: 'Especializacion en SQL Server',
+      issuer: 'WE Educacion Ejecutiva',
+      issued: '01/06/2021 - 20/11/2021',
+      assetBase: '/assets/certificates/Certificado_GUEVARA_PUENTE_FAVIO_JESUS_ESPECIALIZACION_EN_SQL_SERVER',
+      alt: 'Certificado de especializacion en SQL Server',
+      linkLabel: 'Ver certificado',
+      tag: 'BOTH',
+    },
+    {
+      title: 'Especializacion en Microsoft Power BI',
+      issuer: 'WE Educacion Ejecutiva',
+      issued: '01/12/2021 - 18/03/2022',
+      assetBase: '/assets/certificates/Certificado_GUEVARA_PUENTE_FAVIO_JESUS_ESPECIALIZACION_EN_POWER_BI',
+      alt: 'Certificado de especializacion en Microsoft Power BI',
+      linkLabel: 'Ver certificado',
+      tag: 'BOTH',
+    },
+    {
+      title: 'PEE Business Analytics',
+      issuer: 'WE Educacion Ejecutiva',
+      issued: '21/03/2022 - 01/05/2022',
+      assetBase: '/assets/certificates/Certificado_GUEVARA_PUENTE_FAVIO_JESUS_BUSINESS_ANALYTICS',
+      alt: 'Certificado PEE Business Analytics',
+      linkLabel: 'Ver certificado',
+      tag: 'BOTH',
+    },
+    {
+      title: 'Python Aplicado a Data Science',
+      issuer: 'Pontificia Universidad Catolica del Peru',
+      issued: '15/02/2022 - 01/07/2022',
+      assetBase: '/assets/certificates/Certificado_Capacitacion_Python_aplicado_a_Data_Science',
+      alt: 'Certificado Python aplicado a Data Science',
+      linkLabel: 'Ver certificado',
+      tag: 'BIGDATA',
+    },
+    {
+      title: 'Business Intelligence with PowerBI',
+      issuer: 'SDC Learning',
+      issued: '01/11/2022 - 20/01/2023',
+      assetBase: '/assets/certificates/PB43_GUEVARA_PUENTE',
+      alt: 'Certificado Business Intelligence with PowerBI',
+      linkLabel: 'Ver certificado',
+      tag: 'BOTH',
+    },
+    {
+      title: 'PYTHON DATA ANALYTICS',
+      issuer: 'WE Educacion Ejecutiva',
+      issued: '03/03/2022 - 05/06/2022',
+      assetBase: '/assets/certificates/PYTHON_DATA_ANALYTICS',
+      alt: 'Certificado Python Data Analytics',
+      linkLabel: 'Ver certificado',
+      tag: 'BIGDATA',
+    },
+    {
+      title: 'NET 9 Microservicios',
+      issuer: 'Udemy',
+      issued: '01/02/2026 - 28/04/2026',
+      assetBase: '/assets/certificates/NET9_MICROSERVICIOS',
+      alt: 'Certificado Net 9 - Microservicios',
+      linkLabel: 'Ver certificado',
+      tag: 'SOFTWARE',
+    },
+    {
+      title: 'Arquitectura Basada en Microservicios',
+      issuer: 'Software Engineering LATAM',
+      issued: '29/10/2022 - 10/12/2022',
+      assetBase: '/assets/certificates/MICROSERVICIOS_FJGP',
+      alt: 'Certificado de arquitectura basada en microservicios',
+      linkLabel: 'Ver certificado',
+      tag: 'SOFTWARE',
+    },
+    {
+      title: 'PHP Nivel II - DAO - POO',
+      issuer: 'Universidad Nacional de Ingenieria',
+      issued: '10/02/2020 - 26/02/2020',
+      assetBase: '/assets/certificates/GUEVARA_PUENTE_FAVIO_JESUS_PHP_II',
+      alt: 'Certificado PHP Nivel II DAO POO',
+      linkLabel: 'Ver certificado',
+      tag: 'SOFTWARE',
+    },
+    {
+      title: '.NET 6 & Angular 14',
+      issuer: 'Udemy',
+      issued: '21/08/2024 - 21/09/2024',
+      assetBase: '/assets/certificates/N6_ANGULAR_14_FJGP',
+      alt: 'Certificado .NET 6',
+      linkLabel: 'Ver certificado',
+      tag: 'SOFTWARE',
+    },
+    {
+      title: 'Angular 14 Experto',
+      issuer: 'Udemy',
+      issued: '01/07/2024 - 06/09/2024',
+      assetBase: '/assets/certificates/CETRIFICADO_ANGULAR_14',
+      alt: 'Certificado Angular Experto',
+      linkLabel: 'Ver certificado',
+      tag: 'SOFTWARE',
     },
   ] satisfies CertificateItem[],
   languages: [
     {
       name: 'Espanol',
-      level: 'Nativo',
+      level: 'Lengua materna',
       context: 'Comunicacion profesional, documentacion y presentaciones.',
     },
     {
       name: 'Ingles',
-      level: 'Intermedio',
-      context: 'Lectura tecnica, documentacion, cursos y colaboracion remota.',
+      level: 'Avanzado - B2',
+      context:
+        'Cambridge Assessment English, lectura tecnica, documentacion y colaboracion profesional.',
+      certificates: [
+        {
+          title: 'Cambridge English Level 1 Certificate in ESOL International',
+          issuer: 'Cambridge University',
+          issued: '01/01/2019 - 01/06/2019',
+          assetBase: '/assets/languages/CAMBRIDGE_CERTIFICATE_GUEVARA_PUENTE',
+          alt: 'Certificado Cambridge English Level 1 Certificate in ESOL International',
+          linkLabel: 'Descargar certificado',
+        },
+      ],
+    },
+    {
+      name: 'Portugues',
+      level: 'Avanzado',
+      context: 'Formacion en UNMSM y uso profesional para lectura y comunicacion.',
+      certificates: [
+        {
+          title: 'Portugues Avanzado',
+          issuer: 'Universidad Nacional Mayor de San Marcos',
+          issued: '18/10/2023 - 19/01/2024',
+          assetBase: '/assets/languages/CERTIFICADO-UNMSM-IDIOMA-PORTUGUES',
+          alt: 'Certificado de portugues avanzado',
+          linkLabel: 'Descargar certificado',
+        },
+      ],
     },
   ] satisfies LanguageItem[],
   projects: [
     {
-      title: 'Dashboard de operaciones',
+      title: 'SISECON - Seguimiento de Condecoraciones',
       category: 'Web',
-      year: '2026',
+      year: '2023 - Actualidad',
       summary:
-        'Panel administrativo con metricas clave, estados operativos y visualizacion clara para equipos internos.',
-      stack: ['Angular', 'Charts', 'SCSS'],
-      linkLabel: 'Caso de estudio',
-      link: '#contact',
-      image: {
-        src: '/assets/projects/dashboard-operaciones.jpg',
-        alt: 'Preview del dashboard de operaciones',
-      },
-      tag: 'SOFTWARE',
-    },
-    {
-      title: 'Landing para producto SaaS',
-      category: 'Web',
-      year: '2025',
-      summary:
-        'Sitio estatico optimizado para conversion, con secciones editables y una identidad visual tecnica.',
-      stack: ['Angular', 'SEO', 'Animations'],
-      linkLabel: 'Ver demo',
-      link: '#home',
-      image: {
-        src: '/assets/projects/landing-saas.jpg',
-        alt: 'Preview de la landing para producto SaaS',
-      },
-      tag: 'SOFTWARE',
-    },
-    {
-      title: 'Aplicacion de inventario movil',
-      category: 'Mobile',
-      year: '2025',
-      summary:
-        'Flujo de trabajo para registro, consulta y trazabilidad de inventario en campo con enfoque offline first.',
-      stack: ['Flutter', 'Dart', 'Sync'],
-      linkLabel: 'Ver detalles',
+        'Aplicativo web institucional para seguimiento de condecoraciones, con interfaz en Angular, integracion de APIs, logica backend y consultas sobre SQL Server.',
+      stack: ['Angular', 'TypeScript', '.NET', 'C#', 'SQL Server'],
+      linkLabel: 'Ver experiencia',
       link: '#experience',
       image: {
-        src: '/assets/projects/inventario-mobile.jpg',
-        alt: 'Preview de la aplicacion movil de inventario',
+        src: '/assets/projects/SISECON.png',
+        alt: 'Preview de SISECON seguimiento de condecoraciones',
       },
       tag: 'SOFTWARE',
     },
     {
-      title: 'API para gestion academica',
-      category: 'Backend',
-      year: '2024',
+      title: 'SINVINF - Inventario de Recursos Informaticos',
+      category: 'Web',
+      year: '2023 - Actualidad',
       summary:
-        'Servicios y reglas de negocio para manejar usuarios, cursos y reportes con endpoints claros y mantenibles.',
-      stack: ['Node.js', 'REST', 'PostgreSQL'],
-      linkLabel: 'Arquitectura',
-      link: '#contact',
+        'Aplicativo web para gestion e inventario de recursos informaticos, orientado a consulta, registro, seguimiento y mantenimiento de informacion institucional.',
+      stack: ['Angular', 'TypeScript', '.NET', 'C#', 'SQL Server'],
+      linkLabel: 'Ver experiencia',
+      link: '#experience',
       image: {
-        src: '/assets/projects/api-academica.jpg',
-        alt: 'Preview de la API para gestion academica',
+        src: '/assets/projects/SINVINF.png',
+        alt: 'Preview de SINVINF inventario de recursos informaticos',
       },
       tag: 'SOFTWARE',
     },
     {
-      title: 'Visualizacion de indicadores',
+      title: 'SIMSIC - Seguimiento de Informes de Control',
+      category: 'Web',
+      year: '2023 - Actualidad',
+      summary:
+        'Aplicativo web para seguimiento de informes de control, con funcionalidades de consulta, trazabilidad, integracion de servicios y gestion de datos.',
+      stack: ['Angular', 'TypeScript', '.NET', 'C#', 'SQL Server', 'PowerBI'],
+      linkLabel: 'Ver experiencia',
+      link: '#experience',
+      image: {
+        src: '/assets/projects/SIMSIC.png',
+        alt: 'Preview de SIMSIC seguimiento de informes de control',
+      },
+      tag: 'SOFTWARE',
+    },
+    {
+      title: 'Sistema web para Ministerio de Vivienda',
+      category: 'Web',
+      year: '2019 - 2023',
+      summary:
+        'Aplicativo web empresarial desarrollado con Angular, Spring Boot y PostgreSQL, incluyendo frontend integral, APIs, reglas de negocio y documentacion tecnica.',
+      stack: ['Angular', 'Spring Boot', 'Java', 'PostgreSQL', 'AWS', 'SCRUM'],
+      linkLabel: 'Ver experiencia',
+      link: '#experience',
+      image: {
+        src: '/assets/projects/Logo-1-MVCS.png',
+        alt: 'Preview del sistema web para Ministerio de Vivienda',
+      },
+      tag: 'SOFTWARE',
+    },
+    {
+      title: 'Dashboards y reporting para gestion institucional',
       category: 'Data',
-      year: '2024',
+      year: '2019 - Actualidad',
       summary:
-        'Representacion de datos operativos con un enfoque visual limpio para detectar patrones rapidamente.',
-      stack: ['Python', 'Pandas', 'BI'],
-      linkLabel: 'Ver enfoque',
-      link: '#projects',
+        'Analisis, modelado y visualizacion de datos con PowerBI y Looker Studio para seguimiento de informacion, reporting y toma de decisiones.',
+      stack: ['PowerBI', 'Looker Studio', 'SQL Server', 'PostgreSQL', 'Excel'],
+      linkLabel: 'Ver experiencia',
+      link: '#experience',
       image: {
-        src: '/assets/projects/indicadores-data.jpg',
-        alt: 'Preview de visualizacion de indicadores',
+        src: '/assets/projects/dashboards-reporting-bi.jpg',
+        alt: 'Preview de dashboards y reporting para gestion institucional',
       },
       tag: 'BIGDATA',
     },
     {
-      title: 'Pipeline de consolidacion comercial',
+      title: 'Migracion y automatizacion de datos en SQL Server',
       category: 'Data',
-      year: '2025',
+      year: '2023 - Actualidad',
       summary:
-        'Proceso ETL para unificar fuentes de ventas, limpiar inconsistencias y publicar indicadores confiables.',
-      stack: ['Python', 'SQL', 'ETL'],
-      linkLabel: 'Ver pipeline',
-      link: '#projects',
+        'Construccion de vistas, stored procedures y procesos de migracion de datos para consolidar informacion y automatizar operaciones.',
+      stack: ['SQL Server', 'Stored Procedures', 'Vistas SQL', 'PowerBI', 'Excel'],
+      linkLabel: 'Ver experiencia',
+      link: '#experience',
       image: {
-        src: '/assets/projects/pipeline-comercial.jpg',
-        alt: 'Preview del pipeline de consolidacion comercial',
+        src: '/assets/projects/migracion-datos-sql-server.jpg',
+        alt: 'Preview de migracion y automatizacion de datos en SQL Server',
+      },
+      tag: 'BIGDATA',
+    },
+    {
+      title: 'KPIs empresariales con SQL experto',
+      category: 'Data',
+      year: '2024 - 2025',
+      summary:
+        'Construccion de queries avanzadas para extraer KPIs desde informacion de distintas empresas, optimizando consultas y transformando datos en indicadores accionables.',
+      stack: ['SQL', 'KPIs', 'Data Analysis', 'Reporting', 'Business Intelligence'],
+      linkLabel: 'Ver experiencia',
+      link: '#experience',
+      image: {
+        src: '/assets/projects/scanntech-kpis-sql.jpg',
+        alt: 'Preview de KPIs empresariales con SQL experto',
+      },
+      tag: 'BIGDATA',
+    },
+    {
+      title: 'Ingesta y transformacion macro de datos',
+      category: 'Data',
+      year: '2025 - Actualidad',
+      summary:
+        'Procesos de ingesta y transformacion de datos a gran escala usando Spark, Python y ecosistema Hadoop para flujos distribuidos de procesamiento.',
+      stack: ['Spark', 'Python', 'HDFS', 'Azkaban', 'YARN', 'Big Data'],
+      linkLabel: 'Ver experiencia',
+      link: '#experience',
+      image: {
+        src: '/assets/projects/scanntech-bigdata-ingesta.jpg',
+        alt: 'Preview de ingesta y transformacion macro de datos',
       },
       tag: 'BIGDATA',
     },
   ] satisfies ProjectItem[],
+  research: [
+    {
+      title: 'Business Intelligence Architecture to Improve Decision Making',
+      year: '2022',
+      summary:
+        'Articulo de investigacion publicado en IEEE que propone una arquitectura de inteligencia empresarial para gestionar grandes volumenes de datos en entidades publicas y mejorar la toma de decisiones.',
+      stack: ['Business Intelligence', 'Scrum', 'Analisis de datos', 'Arquitectura BI'],
+      linkLabel: 'Ver articulo',
+      link: 'https://ieeexplore.ieee.org/document/10008297/authors#authors',
+      image: {
+        src: '/assets/projects/business_intelligence.png',
+        alt: 'Preview del articulo sobre arquitectura de business intelligence',
+      },
+      tag: 'BOTH',
+    },
+    {
+      title: 'Comparison of DEMUCS Neural Network on Different Platforms',
+      year: '2022',
+      summary:
+        'Articulo de investigacion publicado en IEEE que compara el uso de la red neuronal DEMUCS en plataformas web, escritorio y movil para separar fuentes musicales y evaluar tiempos de ejecucion.',
+      stack: ['Machine Learning', 'DEMUCS', 'Redes neuronales', 'Web', 'Mobile'],
+      linkLabel: 'Ver articulo',
+      link: 'https://ieeexplore.ieee.org/document/10008289',
+      image: {
+        src: '/assets/projects/comparission_demucs.png',
+        alt: 'Preview del articulo sobre red neuronal DEMUCS',
+      },
+      tag: 'BOTH',
+    },
+  ] satisfies ResearchItem[],
   experience: [
     {
-      id: 'frontend-main',
-      role: 'Frontend Developer',
-      company: 'Empresa / Cliente principal',
-      period: '2024 - Actualidad',
+      id: 'scanntech-bigdata-engineer-2025',
+      role: 'Big Data Engineer',
+      company: 'Scanntech',
+      logo: {
+        src: '/assets/logos/SCANNTECH.png',
+        alt: 'Logo de Scanntech',
+      },
+      period: '04/2025 - Actualidad',
       location: 'Lima, Peru',
-      websiteLabel: 'empresa.com',
-      website: 'https://empresa.com',
+      websiteLabel: 'scanntech.com',
+      website: 'https://www.scanntech.com/',
       summary:
-        'Construccion de interfaces y modulos para productos web con foco en claridad visual, mantenimiento y rendimiento.',
+        'Ingenieria Big Data enfocada en procesos de ingesta y transformacion de informacion a nivel macro dentro de ecosistemas distribuidos.',
       achievements: [
-        'Estructure componentes reutilizables para acelerar nuevas pantallas.',
-        'Mejore tiempos de carga eliminando dependencias innecesarias.',
-        'Coordine entregas con enfoque en experiencia de usuario y escalabilidad.',
+        'Desarrollo procesos de ingesta de datos para flujos de informacion de gran escala.',
+        'Implemento transformaciones con Spark y Python para preparar datos analiticos.',
+        'Trabajo con HDFS, Azkaban y YARN para ejecucion, orquestacion y procesamiento distribuido.',
+        'Apoyo la estabilidad y trazabilidad de procesos de datos para consumo analitico.',
       ],
-      stack: ['Angular', 'TypeScript', 'SCSS'],
-      tag: 'SOFTWARE',
-    },
-    {
-      id: 'software-consulting',
-      role: 'Software Developer',
-      company: 'Consultoria / Proyectos independientes',
-      period: '2022 - 2024',
-      location: 'Remoto',
-      websiteLabel: 'proyectos.dev',
-      website: 'https://proyectos.dev',
-      summary:
-        'Desarrollo de soluciones web y soporte a productos digitales para distintos tipos de negocio.',
-      achievements: [
-        'Implemente landings, paneles internos y formularios personalizados.',
-        'Defini estructuras de datos faciles de mantener por el equipo.',
-        'Priorice implementaciones simples antes que arquitecturas sobrecargadas.',
-      ],
-      stack: ['JavaScript', 'Node.js', 'SQL'],
-      tag: 'SOFTWARE',
-    },
-    {
-      id: 'data-team',
-      role: 'Big Data Team Member',
-      company: 'Unidad de datos / analitica',
-      period: '2023 - Actualidad',
-      location: 'Lima, Peru',
-      websiteLabel: 'analytics.local',
-      website: 'https://analytics.local',
-      summary:
-        'Participacion en procesos de integracion, tratamiento y visualizacion de datos para apoyar analisis y toma de decisiones.',
-      achievements: [
-        'Construi consultas y transformaciones para consolidar datos de multiples fuentes.',
-        'Aporte a dashboards y reportes de seguimiento con foco en calidad de datos.',
-        'Documente procesos para que el flujo analitico sea mas claro y repetible.',
-      ],
-      stack: ['Python', 'SQL', 'Power BI'],
+      stack: ['Spark', 'Python', 'HDFS', 'Azkaban', 'YARN', 'Big Data'],
       tag: 'BIGDATA',
+    },
+    {
+      id: 'scanntech-sql-expert-2024',
+      role: 'Experto SQL',
+      company: 'Scanntech',
+      logo: {
+        src: '/assets/logos/SCANNTECH.png',
+        alt: 'Logo de Scanntech',
+      },
+      period: '04/2024 - 04/2025',
+      location: 'Lima, Peru',
+      websiteLabel: 'scanntech.com',
+      website: 'https://www.scanntech.com/',
+      summary:
+        'Rol especializado en construccion de consultas SQL avanzadas para extraer KPIs de distintas empresas y convertir informacion operacional en indicadores de negocio.',
+      achievements: [
+        'Desarrolle queries avanzadas para extraccion y analisis de KPIs empresariales.',
+        'Optimice consultas orientadas a reporting, analisis y seguimiento de negocio.',
+        'Integre informacion de multiples empresas para generar indicadores comparables.',
+        'Apoye requerimientos analiticos con criterio de calidad, consistencia y performance.',
+      ],
+      stack: ['SQL', 'KPIs', 'Business Intelligence', 'Reporting', 'Data Analysis'],
+      tag: 'BIGDATA',
+    },
+    {
+      id: 'pcm-fullstack-2023',
+      role: 'Desarrollador Full Stack',
+      company: 'PCM - Presidencia del Consejo de Ministros',
+      logo: {
+        src: '/assets/logos/PCM.jpg',
+        alt: 'Logo de la Presidencia del Consejo de Ministros',
+      },
+      period: '11/2023 - Actualidad',
+      location: 'Lima, Peru',
+      websiteLabel: 'gob.pe/pcm',
+      website: 'https://www.gob.pe/pcm',
+      summary:
+        'Desarrollo full stack enfocado en aplicativos web institucionales como SISECON, SINVINF y SIMSIC, integrando frontend Angular, backend .NET, APIs, SQL Server, migracion de datos y dashboards con PowerBI.',
+      achievements: [
+        'Implemente exitosamente SISECON para seguimiento de condecoraciones.',
+        'Implemente exitosamente SINVINF para inventario de recursos informaticos.',
+        'Implemente exitosamente SIMSIC para seguimiento de informes de control.',
+        'Desarrolle interfaces responsivas usando Angular, HTML, CSS y TypeScript.',
+        'Implemente APIs y logica de negocio en .NET para consumo desde el frontend.',
+        'Desarrolle vistas, stored procedures y procesos de migracion de datos en SQL Server.',
+        'Integre dashboards de PowerBI para visualizacion y seguimiento de informacion.',
+      ],
+      stack: ['SQL Server', 'PowerBI', 'Angular', 'TypeScript', 'C#', '.NET', 'Git'],
+      tag: 'SOFTWARE',
+    },
+    {
+      id: 'amd-fullstack-bi-2019',
+      role: 'Desarrollador Full Stack & Analista BI',
+      company: 'AMD Consultores SAC',
+      logo: {
+        src: '/assets/logos/AMD.png',
+        alt: 'Logo de AMD Consultores SAC',
+      },
+      period: '04/2019 - 09/2023',
+      location: 'Lima, Peru',
+      websiteLabel: 'Proyecto consultoria',
+      website: '#contact',
+      summary:
+        'Desarrollo full stack y analisis BI con responsabilidades en frontend, backend, base de datos, analisis de datos, administracion AWS, documentacion tecnica y soporte a requerimientos bajo SCRUM.',
+      achievements: [
+        'Implemente exitosamente un aplicativo web para el Ministerio de Vivienda, Construccion y Saneamiento.',
+        'Desarrolle el frontend integral de la aplicacion usando Angular y TypeScript.',
+        'Implemente APIs y logica de negocio con Java Spring Boot.',
+        'Disene la base de datos del negocio usando PostgreSQL.',
+        'Implemente triggers y stored procedures para automatizar procesos de negocio.',
+        'Desarrolle analisis de datos y visualizaciones con PowerBI y Looker Studio.',
+        'Administre infraestructura en AWS y elabore documentacion tecnica del sistema.',
+      ],
+      stack: [
+        'AWS',
+        'Angular',
+        'TypeScript',
+        'PostgreSQL',
+        'Spring Boot',
+        'Java',
+        'PowerBI',
+        'Looker Studio',
+      ],
+      tag: 'SOFTWARE',
+    },
+    {
+      id: 'mvcs-backend-db-2021',
+      role: 'Practicante Pre Profesional - Backend y Base de Datos',
+      company: 'Ministerio de Vivienda, Construccion y Saneamiento',
+      logo: {
+        src: '/assets/logos/MVCS.jpg',
+        alt: 'Logo del Ministerio de Vivienda, Construccion y Saneamiento',
+      },
+      period: '08/2021 - 02/2022',
+      location: 'Lima, Peru',
+      websiteLabel: 'gob.pe/vivienda',
+      website: 'https://www.gob.pe/vivienda',
+      summary:
+        'Practicas pre profesionales enfocadas en desarrollo backend con Java Spring Boot, diseno y administracion de PostgreSQL, automatizacion con triggers y soporte a infraestructura AWS.',
+      achievements: [
+        'Implemente triggers para automatizar procesos y reducir tiempos en calculos relacionados con tratamiento de aguas residuales.',
+        'Desarrolle APIs y logica de negocio con Java Spring Boot.',
+        'Disene estructuras de base de datos en PostgreSQL.',
+        'Administre roles, permisos e indices de base de datos.',
+        'Brinde soporte a la administracion del servidor AWS.',
+      ],
+      stack: ['Java', 'Spring Boot', 'PostgreSQL', 'Postman', 'Git', 'AWS', 'Triggers'],
+      tag: 'SOFTWARE',
     },
   ] satisfies ExperienceItem[],
   contact: {
-    headline: 'Construyamos algo con identidad propia.',
+    headline: 'Trabajemos juntos en soluciones web, backend, datos y BI',
     text:
-      'Puedes usar este portafolio para mostrar tu lado de desarrollo, tu perfil de datos o ambos desde una sola base mantenible.',
+      'Soy Favio Jesus Guevara Puente, desarrollador full stack y analista BI con experiencia en aplicaciones web, APIs, bases de datos, dashboards y automatizacion de procesos.',
     links: [
-      { label: 'Email', href: 'mailto:tunombre@email.com' },
-      { label: 'LinkedIn', href: 'https://www.linkedin.com/' },
-      { label: 'GitHub', href: 'https://github.com/' },
+      { label: 'Email', href: 'mailto:faviogpfk@gmail.com' },
+      { label: 'LinkedIn', href: 'https://www.linkedin.com/in/faviojguevara/' },
+      { label: 'Portafolio', href: 'https://faviojguevara.com/' },
     ],
   },
 } as const;
