@@ -24,7 +24,7 @@
   <header class="site-header site-header--hero">
     <div class="site-header__inner" id="home">
       <a class="site-header__brand" href="#home">
-        {{ data.profile.name }}<span>.</span>
+        <img src="/assets/logos/logofavioblanco.png" [alt]="data.profile.name" />
       </a>
 
       <button
@@ -72,7 +72,7 @@
   <header class="site-header site-header--floating" [class.site-header--visible]="showFloatingNav()">
     <div class="site-header__inner site-header__inner--floating">
       <a class="site-header__brand site-header__brand--small" href="#home">
-        {{ data.profile.name }}<span>.</span>
+        <img src="/assets/logos/logofavioblanco.png" [alt]="data.profile.name" />
       </a>
 
       <button
@@ -121,20 +121,20 @@
 
   <main class="layout">
     <section class="hero section-panel section-panel--hero" data-reveal>
-      <div class="hero__copy">
-        <p class="eyebrow">{{ currentVariant().eyebrow }}</p>
+      <div class="hero__intro">
+        <p class="hero__profession">Ingeniero Informático</p>
         <h1>{{ data.profile.name }}</h1>
         <p class="hero__role">{{ currentVariant().role }}</p>
-        <p class="hero__text">{{ currentVariant().tagline }}</p>
+      </div>
 
-        <div class="hero__actions">
-          <a class="button button--primary" [href]="data.profile.contactLink">
-            {{ data.profile.contactLabel }}
-          </a>
-          <a class="button button--ghost" [href]="data.profile.resumeLink">
-            {{ data.profile.resumeLabel }}
-          </a>
-        </div>
+      <div class="hero__copy">
+        <figure class="hero__photo-card hero__photo-card--featured">
+          <img
+            class="hero__photo"
+            [src]="data.profile.photo.src"
+            [alt]="data.profile.photo.alt"
+          />
+        </figure>
 
         <ul class="hero__stats" aria-label="Resumen profesional">
           @for (stat of visibleStats(); track stat.value + stat.label) {
@@ -147,40 +147,23 @@
       </div>
 
       <div class="hero__visual">
-        <div class="orb orb--top"></div>
         <div class="hero__visual-stack">
-          <figure class="hero__photo-card">
-            <img
-              class="hero__photo"
-              [src]="data.profile.photo.src"
-              [alt]="data.profile.photo.alt"
-            />
-          </figure>
+          <div class="hero__summary-card">
+            <p class="hero__profession">Ingeniero Informático</p>
+            <h1>{{ data.profile.name }}</h1>
+            <p class="hero__role">{{ currentVariant().role }}</p>
+            <p class="hero__text">{{ currentVariant().tagline }}</p>
 
-          <div class="hero__visual-frame">
-            <div class="hero__window-bar">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-
-            <div class="code-card">
-              @for (line of currentVariant().heroCode; track line) {
-                <span>{{ line }}</span>
-              }
+            <div class="hero__actions">
+              <a class="button button--primary" [href]="data.profile.contactLink">
+                {{ data.profile.contactLabel }}
+              </a>
+              <a class="button button--ghost" [href]="data.profile.resumeLink">
+                {{ data.profile.resumeLabel }}
+              </a>
             </div>
           </div>
 
-          <div class="hero__info-strip">
-            <div>
-              <span>base</span>
-              <strong>{{ data.profile.location }}</strong>
-            </div>
-            <div>
-              <span>estado</span>
-              <strong>{{ currentVariant().availability }}</strong>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -511,4 +494,8 @@
       </section>
     }
   </main>
+
+  <footer class="site-footer">
+    <p>© 2026 Favio Guevara. Todos los derechos reservados.</p>
+  </footer>
 </div>
