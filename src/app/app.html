@@ -250,6 +250,78 @@
       </section>
     }
 
+    @if (data.sections.education.visible) {
+      <section class="section section-panel section-panel--bright" id="education" data-reveal>
+        <div class="section-heading">
+          <p class="section-kicker">{{ data.sections.education.kicker }}</p>
+          <h2>Recorrido academico.</h2>
+          <p>
+            Estudios universitarios, maestria y certificaciones ordenadas por fecha para ver como
+            fue creciendo mi perfil tecnico.
+          </p>
+        </div>
+
+        <div
+          class="education-timeline-shell"
+          data-reveal
+          [style.--timeline-glow-cycle]="educationTimelineGlowCycle()"
+        >
+          <div class="education-timeline-shell__meta">
+            @for (year of educationTimelineYears(); track year) {
+              <span>{{ year }}</span>
+            }
+          </div>
+
+          <div class="education-timeline">
+            <div class="education-timeline__axis"></div>
+
+            @for (year of educationTimelineYears(); track year; let index = $index) {
+              <span
+                class="education-timeline__tick"
+                [style.left.%]="(index / (educationTimelineYears().length - 1)) * 100"
+              ></span>
+            }
+
+            @for (item of visibleEducationTimeline(); track item.title + item.period; let index = $index) {
+              <article
+                class="education-timeline__item"
+                [class.education-timeline__item--range]="item.kind === 'range'"
+                [class.education-timeline__item--milestone]="item.kind === 'milestone'"
+                [class.education-timeline__item--highlight]="item.accent === 'highlight'"
+                [class.education-timeline__item--default]="item.accent === 'default'"
+                [style.left.%]="item.startPct"
+                [style.width.%]="item.kind === 'range' ? item.widthPct : null"
+                [style.--timeline-lane]="item.lane"
+                [style.--timeline-offset.rem]="item.offsetRem"
+                [style.--timeline-offset-abs.rem]="item.offsetAbsRem"
+                [style.--timeline-side]="item.side"
+                [style.--timeline-start-order]="item.startGlowOrder"
+                [style.--timeline-end-order]="item.endGlowOrder"
+              >
+                <span class="education-timeline__node"></span>
+                <span class="education-timeline__bar">
+                  <strong>{{ item.title }}</strong>
+                </span>
+                <div class="education-timeline__tooltip panel-card">
+                  <div class="education-timeline__eyebrow">
+                    <span>{{ item.type }}</span>
+                    <span>{{ item.duration }}</span>
+                  </div>
+
+                  <h3>{{ item.title }}</h3>
+                  <p>{{ item.issuer }}</p>
+
+                  <div class="education-timeline__rail">
+                    <span class="education-timeline__rail-start">{{ item.rangeLabel }}</span>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+        </div>
+      </section>
+    }
+
     @if (data.sections.languages.visible) {
       <section class="section section-panel section-panel--bright" id="languages" data-reveal>
         <div class="section-heading">

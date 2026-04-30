@@ -4,6 +4,7 @@ export type ProfileTag = ProfileMode | 'BOTH';
 export type SectionId =
   | 'home'
   | 'certificates'
+  | 'education'
   | 'languages'
   | 'projects'
   | 'research'
@@ -49,7 +50,18 @@ export interface CertificateItem extends TaggedContent {
   issued: string;
   assetBase: string;
   alt: string;
+  badges?: string[];
   linkLabel?: string;
+}
+
+export interface EducationItem extends TaggedContent {
+  title: string;
+  issuer: string;
+  period: string;
+  type: string;
+  duration?: string;
+  badges?: string[];
+  kind?: 'range' | 'milestone';
 }
 
 export interface LanguageCertificate {
@@ -135,34 +147,40 @@ export const portfolioData = {
       kicker: '01 / Certificados',
       visible: true,
     },
+    education: {
+      id: 'education',
+      navLabel: 'Estudios',
+      kicker: '02 / Estudios',
+      visible: true,
+    },
     languages: {
       id: 'languages',
       navLabel: 'Idiomas',
-      kicker: '02 / Idiomas',
+      kicker: '03 / Idiomas',
       visible: true,
     },
     projects: {
       id: 'projects',
       navLabel: 'Proyectos',
-      kicker: '03 / Proyectos',
+      kicker: '04 / Proyectos',
       visible: true,
     },
     research: {
       id: 'research',
       navLabel: 'Investigacion',
-      kicker: '04 / Investigacion',
+      kicker: '05 / Investigacion',
       visible: true,
     },
     experience: {
       id: 'experience',
       navLabel: 'Experiencia',
-      kicker: '05 / Experiencia',
+      kicker: '06 / Experiencia',
       visible: true,
     },
     contact: {
       id: 'contact',
       navLabel: 'Contacto',
-      kicker: '06 / Contacto',
+      kicker: '07 / Contacto',
       visible: true,
     },
   } satisfies Record<SectionId, SectionConfig>,
@@ -192,6 +210,7 @@ export const portfolioData = {
       floatingNav: [
         { code: 'fn', label: 'home()', target: 'home' },
         { code: 'cert', label: 'certificates', target: 'certificates' },
+        { code: 'edu', label: 'studies', target: 'education' },
         { code: 'lang', label: 'languages', target: 'languages' },
         { code: 'map', label: 'projects', target: 'projects' },
         { code: 'pub', label: 'research', target: 'research' },
@@ -229,6 +248,7 @@ export const portfolioData = {
       floatingNav: [
         { code: 'sql', label: 'select home', target: 'home' },
         { code: 'cert', label: 'certificates', target: 'certificates' },
+        { code: 'edu', label: 'studies', target: 'education' },
         { code: 'lang', label: 'languages', target: 'languages' },
         { code: 'scan', label: 'projects', target: 'projects' },
         { code: 'pub', label: 'research', target: 'research' },
@@ -264,11 +284,30 @@ export const portfolioData = {
     {
       title: 'Titulo en Ingenieria Informatica',
       issuer: 'Universidad Nacional Federico Villarreal',
-      issued: '30/06/2025',
+      issued: '30/01/2023 - 30/07/2025',
       assetBase: '/assets/certificates/TITULO_GUEVARA_PUENTE_FAVIO_JESUS',
       alt: 'Titulo en Ingenieria Informatica',
+      badges: ['REMARKABLE'],
       linkLabel: 'Ver certificado',
       tag: 'BOTH',
+    },
+    {
+      title: 'NET 9 Microservicios',
+      issuer: 'Udemy',
+      issued: '01/02/2026 - 28/04/2026',
+      assetBase: '/assets/certificates/NET9_MICROSERVICIOS',
+      alt: 'Certificado Net 9 - Microservicios',
+      linkLabel: 'Ver certificado',
+      tag: 'SOFTWARE',
+    },
+    {
+      title: 'Angular 21',
+      issuer: 'Udemy',
+      issued: '15/02/2026 - 29/04/2026',
+      assetBase: '/assets/certificates/angular-21-fjgp',
+      alt: 'Certificado Angular 21',
+      linkLabel: 'Ver certificado',
+      tag: 'SOFTWARE',
     },
     {
       title: 'Administrador de Base de Datos SQL Server',
@@ -282,7 +321,7 @@ export const portfolioData = {
     {
       title: 'Programador Excel VBA',
       issuer: 'Universidad Nacional de Ingenieria',
-      issued: '01/04/2018 - 01/09/2018',
+      issued: '01/05/2018 - 01/09/2018',
       assetBase: '/assets/certificates/CEPS_UNI-PROGRAMADOR_EXCEL_VBA-GUEVARA_PUENTE',
       alt: 'Certificado de programador Excel VBA',
       linkLabel: 'Ver certificado',
@@ -369,15 +408,7 @@ export const portfolioData = {
       linkLabel: 'Ver certificado',
       tag: 'BIGDATA',
     },
-    {
-      title: 'NET 9 Microservicios',
-      issuer: 'Udemy',
-      issued: '01/02/2026 - 28/04/2026',
-      assetBase: '/assets/certificates/NET9_MICROSERVICIOS',
-      alt: 'Certificado Net 9 - Microservicios',
-      linkLabel: 'Ver certificado',
-      tag: 'SOFTWARE',
-    },
+    
     {
       title: 'Arquitectura Basada en Microservicios',
       issuer: 'Software Engineering LATAM',
@@ -415,6 +446,28 @@ export const portfolioData = {
       tag: 'SOFTWARE',
     },
   ] satisfies CertificateItem[],
+  education: [
+    {
+      title: 'Ingenieria Informatica',
+      issuer: 'Universidad Nacional Federico Villarreal',
+      period: '15/04/2018 - 30/03/2023',
+      type: 'Carrera universitaria',
+      duration: '5 anos academicos',
+      badges: ['REMARKABLE'],
+      kind: 'range',
+      tag: 'BOTH',
+    },
+    {
+      title: 'Maestria en Data Science',
+      issuer: 'Formacion de posgrado',
+      period: '05/08/2024 - Actualidad',
+      type: 'Maestria',
+      duration: 'En curso',
+      badges: ['IN PROGRESS'],
+      kind: 'range',
+      tag: 'BOTH',
+    },
+  ] satisfies EducationItem[],
   languages: [
     {
       name: 'Espanol',

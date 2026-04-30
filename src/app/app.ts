@@ -12,6 +12,7 @@ import {
 
 import {
   CertificateItem,
+  EducationItem,
   ExperienceItem,
   FloatingNavItem,
   LanguageCertificate,
@@ -22,12 +23,42 @@ import {
   portfolioData,
 } from './portfolio.data';
 
+type EducationTimelineEntry = {
+  title: string;
+  issuer: string;
+  period: string;
+  type: string;
+  duration?: string;
+  rangeLabel: string;
+  startPct: number;
+  widthPct: number;
+  lane: number;
+  offsetRem: number;
+  offsetAbsRem: number;
+  side: number;
+  kind: 'range' | 'milestone';
+  accent: 'highlight' | 'default';
+  endPct: number;
+  startGlowOrder: number;
+  endGlowOrder: number;
+  tag: ProfileTag;
+};
+
+type EducationTimelineKind = 'range' | 'milestone';
+type EducationTimelineGlowEvent = {
+  itemIndex: number;
+  edge: 'start' | 'end';
+  date: Date;
+};
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
 export class App implements AfterViewInit {
+  private readonly timelineStartYear = 2018;
+  private readonly timelineEndYear = 2026;
   private readonly host = inject(ElementRef<HTMLElement>);
   private readonly renderer = inject(Renderer2);
   private readonly destroyRef = inject(DestroyRef);
@@ -69,6 +100,84 @@ export class App implements AfterViewInit {
   protected readonly visibleCertificates = computed(() =>
     this.data.certificates.filter((item) => this.matchesProfile(item.tag)),
   );
+
+  protected readonly visibleEducationTimeline = computed<EducationTimelineEntry[]>(() => {
+    const education: EducationTimelineEntry[] = this.data.education.map((item: EducationItem) => ({
+        title: item.title,
+        issuer: item.issuer,
+        period: item.period,
+        type: item.type,
+        duration: item.duration,
+        rangeLabel: item.period,
+        startPct: 0,
+        widthPct: 0,
+        lane: 0,
+        offsetRem: 0,
+        offsetAbsRem: 0,
+        side: 1,
+        kind: (item.kind ?? 'range') as EducationTimelineKind,
+        accent: (item.badges?.length ? 'highlight' : 'default') as 'highlight' | 'default',
+        endPct: 0,
+        startGlowOrder: 0,
+        endGlowOrder: 0,
+        tag: item.tag,
+      }));
+
+    const certificates: EducationTimelineEntry[] = this.data.certificates.map(
+      (item: CertificateItem) => ({
+      title: item.title,
+      issuer: item.issuer,
+      period: item.issued,
+      type: item.title.startsWith('Titulo') ? 'Titulo profesional' : 'Certificado',
+      duration: this.timelineDuration(item.issued),
+      rangeLabel: this.timelineRange(item.issued),
+      startPct: 0,
+      widthPct: 0,
+      lane: 0,
+      offsetRem: 0,
+      offsetAbsRem: 0,
+      side: 1,
+      kind: (item.issued.includes(' - ') ? 'range' : 'milestone') as EducationTimelineKind,
+      accent: (item.badges?.length ? 'highlight' : 'default') as 'highlight' | 'default',
+      endPct: 0,
+      startGlowOrder: 0,
+      endGlowOrder: 0,
+      tag: item.tag,
+    }));
+
+    const sorted = [...education, ...certificates].sort(
+      (left, right) => this.timelineOrder(left.period) - this.timelineOrder(right.period),
+    );
+
+    const positioned = sorted.map((item) => {
+      const geometry = this.timelineGeometry(item.period, item.kind);
+
+      return {
+        ...item,
+        startPct: geometry.startPct,
+        widthPct: geometry.widthPct,
+        endPct: geometry.endPct,
+      };
+    });
+
+    return this.assignTimelineLanes(this.assignTimelineGlowOrders(positioned));
+  });
+
+  protected readonly educationTimelineYears = computed(() =>
+    Array.from(
+      { length: this.timelineEndYear - this.timelineStartYear + 1 },
+      (_, index) => this.timelineStartYear + index,
+    ),
+  );
+
+  protected readonly educationTimelineGlowCycle = computed(() => {
+    const maxOrder = this.visibleEducationTimeline().reduce(
+      (currentMax, item) => Math.max(currentMax, item.startGlowOrder, item.endGlowOrder),
+      0,
+    );
+
+    return `${Math.max(maxOrder + 1, 1) * 0.75}s`;
+  });
 
   protected readonly languageCertificates = computed(() =>
     this.data.languages.flatMap((language) =>
@@ -317,6 +426,216 @@ export class App implements AfterViewInit {
 
   private matchesProfile(tag: ProfileTag): boolean {
     return tag === 'BOTH' || tag === this.currentProfile();
+  }
+
+  private timelineOrder(period: string): number {
+    const [start] = period.split(' - ').map((value) => value.trim());
+
+    if (start.includes('/')) {
+      const [day, month, year] = start.split('/').map(Number);
+      return new Date(year, month - 1, day).getTime();
+    }
+
+    const year = Number.parseInt(start, 10);
+    return Number.isNaN(year) ? Number.MAX_SAFE_INTEGER : new Date(year, 0, 1).getTime();
+  }
+
+  private timelineRange(period: string): string {
+    const [start, end] = period.split(' - ').map((value) => value.trim());
+
+    if (!end) {
+      return start;
+    }
+
+    return `${this.compactDate(start)} -> ${this.compactDate(end)}`;
+  }
+
+  private timelineDuration(period: string): string {
+    const [start, end] = period.split(' - ').map((value) => value.trim());
+
+    if (!end || end === 'Actualidad') {
+      return 'En curso';
+    }
+
+    const startDate = this.parseTimelineDate(start);
+    const endDate = this.parseTimelineDate(end);
+
+    if (!startDate || !endDate) {
+      return period;
+    }
+
+    const months =
+      (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+      (endDate.getMonth() - startDate.getMonth()) +
+      1;
+
+    if (months >= 12) {
+      const years = Math.round((months / 12) * 10) / 10;
+      return years % 1 === 0 ? `${years} anos` : `${years} anos`;
+    }
+
+    return `${months} meses`;
+  }
+
+  private compactDate(value: string): string {
+    if (value === 'Actualidad') {
+      const today = new Date();
+      return `${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
+    }
+
+    if (value.includes('/')) {
+      const [, month, year] = value.split('/');
+      return `${month}/${year}`;
+    }
+
+    return value;
+  }
+
+  private parseTimelineDate(value: string): Date | null {
+    if (value.includes('/')) {
+      const [day, month, year] = value.split('/').map(Number);
+      return new Date(year, month - 1, day);
+    }
+
+    const year = Number.parseInt(value, 10);
+    return Number.isNaN(year) ? null : new Date(year, 0, 1);
+  }
+
+  private timelineGeometry(
+    period: string,
+    kind: 'range' | 'milestone',
+  ): { startPct: number; widthPct: number; endPct: number } {
+    const [startRaw, endRaw] = period.split(' - ').map((value) => value.trim());
+    const startDate = this.parseTimelineDate(startRaw);
+    const endDate =
+      endRaw === 'Actualidad'
+        ? new Date()
+        : this.parseTimelineDate(endRaw ?? startRaw);
+
+    if (!startDate) {
+      return { startPct: 0, widthPct: 8, endPct: 8 };
+    }
+
+    const totalMonths = (this.timelineEndYear - this.timelineStartYear + 1) * 12;
+    const startMonths =
+      (startDate.getFullYear() - this.timelineStartYear) * 12 + startDate.getMonth();
+    const clampedStart = Math.max(0, Math.min(totalMonths, startMonths));
+    const startPct = (clampedStart / totalMonths) * 100;
+
+    if (kind === 'milestone' || !endDate) {
+      return { startPct, widthPct: 0, endPct: startPct + 6 };
+    }
+
+    const endMonths =
+      (endDate.getFullYear() - this.timelineStartYear) * 12 + endDate.getMonth() + 1;
+    const clampedEnd = Math.max(clampedStart + 1, Math.min(totalMonths, endMonths));
+    const widthPct = ((clampedEnd - clampedStart) / totalMonths) * 100;
+    const endPct = startPct + widthPct;
+
+    return { startPct, widthPct, endPct };
+  }
+
+  private assignTimelineLanes(items: EducationTimelineEntry[]): EducationTimelineEntry[] {
+    const topLanes: number[] = [];
+    const bottomLanes: number[] = [];
+
+    return items.map((item) => {
+      const targetLanes = item.kind === 'range' ? topLanes : bottomLanes;
+      const visualWidth = this.timelineVisualWidth(item);
+      const visualEndPct = item.startPct + visualWidth;
+      const separation = item.accent === 'highlight' ? 2.6 : 1.6;
+      let lane = targetLanes.findIndex((endPct) => item.startPct >= endPct + separation);
+
+      if (lane === -1) {
+        lane = targetLanes.length;
+        targetLanes.push(visualEndPct);
+      } else {
+        targetLanes[lane] = visualEndPct;
+      }
+
+        const offsetRem = this.timelineLaneOffset(lane, item.kind);
+
+        return {
+          ...item,
+          lane,
+          offsetRem,
+          offsetAbsRem: Math.abs(offsetRem),
+          side: offsetRem < 0 ? -1 : 1,
+        };
+      });
+    }
+
+    private timelineVisualWidth(item: EducationTimelineEntry): number {
+      const fixedCardWidthPct = item.accent === 'highlight' ? 8.4 : 6.4;
+
+      if (item.kind === 'range' && item.accent === 'highlight') {
+        return Math.max(item.widthPct, fixedCardWidthPct);
+      }
+
+      return fixedCardWidthPct;
+    }
+
+    private timelineLaneOffset(lane: number, kind: EducationTimelineKind): number {
+      const direction = lane % 2 === 0 ? -1 : 1;
+      const magnitude = (Math.floor((lane + 1) / 2) + 1) * (kind === 'range' ? 3.4 : 3.8);
+
+      return direction * magnitude;
+    }
+
+  private assignTimelineGlowOrders(items: EducationTimelineEntry[]): EducationTimelineEntry[] {
+    const events = items.flatMap((item, itemIndex) => {
+      const dates = this.timelineEventDates(item.period, item.kind);
+      const itemEvents: EducationTimelineGlowEvent[] = [
+        { itemIndex, edge: 'start', date: dates.start },
+      ];
+
+      if (dates.end) {
+        itemEvents.push({ itemIndex, edge: 'end' as const, date: dates.end });
+      }
+
+      return itemEvents;
+    });
+
+    events.sort((left, right) => {
+      const dateDiff = left.date.getTime() - right.date.getTime();
+
+      if (dateDiff !== 0) {
+        return dateDiff;
+      }
+
+      return left.edge === right.edge ? 0 : left.edge === 'start' ? -1 : 1;
+    });
+
+    return items.map((item, itemIndex) => {
+      const startEventIndex = events.findIndex(
+        (event) => event.itemIndex === itemIndex && event.edge === 'start',
+      );
+      const endEventIndex = events.findIndex(
+        (event) => event.itemIndex === itemIndex && event.edge === 'end',
+      );
+
+      return {
+        ...item,
+        startGlowOrder: Math.max(startEventIndex, 0),
+        endGlowOrder: endEventIndex >= 0 ? endEventIndex : Math.max(startEventIndex, 0),
+      };
+    });
+  }
+
+  private timelineEventDates(
+    period: string,
+    kind: EducationTimelineKind,
+  ): { start: Date; end: Date | null } {
+    const [startRaw, endRaw] = period.split(' - ').map((value) => value.trim());
+    const start = this.parseTimelineDate(startRaw) ?? new Date(this.timelineStartYear, 0, 1);
+
+    if (kind === 'milestone' || !endRaw) {
+      return { start, end: null };
+    }
+
+    const end = endRaw === 'Actualidad' ? new Date() : this.parseTimelineDate(endRaw);
+
+    return { start, end };
   }
 
   private startCertificatesAutoplay(): void {
