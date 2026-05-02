@@ -60,9 +60,30 @@
           </button>
         </div>
 
+        <div class="profile-switch" aria-label="Selector de idioma">
+          <button
+            type="button"
+            class="profile-switch__button"
+            [class.profile-switch__button--active]="currentLanguage() === 'ES'"
+            (click)="setLanguage('ES')"
+          >
+            ES
+          </button>
+          <button
+            type="button"
+            class="profile-switch__button"
+            [class.profile-switch__button--active]="currentLanguage() === 'EN'"
+            (click)="setLanguage('EN')"
+          >
+            EN
+          </button>
+        </div>
+
         <nav class="site-nav" aria-label="Secciones principales">
           @for (section of navigationSections(); track section.id) {
-            <a [href]="'#' + section.id" (click)="closeMobileMenu()">{{ section.navLabel }}</a>
+            <a [href]="'#' + section.id" (click)="closeMobileMenu()">
+              {{ sectionText(section, 'navLabel') }}
+            </a>
           }
         </nav>
       </div>
@@ -108,10 +129,29 @@
           </button>
         </div>
 
+        <div class="profile-switch profile-switch--floating" aria-label="Selector flotante de idioma">
+          <button
+            type="button"
+            class="profile-switch__button"
+            [class.profile-switch__button--active]="currentLanguage() === 'ES'"
+            (click)="setLanguage('ES')"
+          >
+            ES
+          </button>
+          <button
+            type="button"
+            class="profile-switch__button"
+            [class.profile-switch__button--active]="currentLanguage() === 'EN'"
+            (click)="setLanguage('EN')"
+          >
+            EN
+          </button>
+        </div>
+
         <nav class="site-nav site-nav--floating" aria-label="Navegacion flotante">
           @for (item of visibleFloatingNav(); track item.label) {
             <a [href]="'#' + item.target" (click)="closeMobileMenu()">
-              <span>{{ item.code }}</span> {{ item.label }}
+              <span>{{ item.code }}</span> {{ floatingLabel(item) }}
             </a>
           }
         </nav>
@@ -122,9 +162,9 @@
   <main class="layout">
     <section class="hero section-panel section-panel--hero" data-reveal>
       <div class="hero__intro">
-        <p class="hero__profession">Ingeniero Informático</p>
+        <p class="hero__profession">{{ text('Ingeniero Informático') }}</p>
         <h1>{{ data.profile.name }}</h1>
-        <p class="hero__role">{{ currentVariant().role }}</p>
+        <p class="hero__role">{{ text(currentVariant().role) }}</p>
       </div>
 
       <div class="hero__copy">
@@ -140,7 +180,7 @@
           @for (stat of visibleStats(); track stat.value + stat.label) {
             <li>
               <strong>{{ stat.value }}</strong>
-              <span>{{ stat.label }}</span>
+              <span>{{ text(stat.label) }}</span>
             </li>
           }
         </ul>
@@ -149,17 +189,17 @@
       <div class="hero__visual">
         <div class="hero__visual-stack">
           <div class="hero__summary-card">
-            <p class="hero__profession">Ingeniero Informático</p>
+            <p class="hero__profession">{{ text('Ingeniero Informático') }}</p>
             <h1>{{ data.profile.name }}</h1>
-            <p class="hero__role">{{ currentVariant().role }}</p>
-            <p class="hero__text">{{ currentVariant().tagline }}</p>
+            <p class="hero__role">{{ text(currentVariant().role) }}</p>
+            <p class="hero__text">{{ text(currentVariant().tagline) }}</p>
 
             <div class="hero__actions">
               <a class="button button--primary" [href]="data.profile.contactLink">
-                {{ data.profile.contactLabel }}
+                {{ text(data.profile.contactLabel) }}
               </a>
               <a class="button button--ghost" [href]="data.profile.resumeLink">
-                {{ data.profile.resumeLabel }}
+                {{ text(data.profile.resumeLabel) }}
               </a>
             </div>
           </div>
@@ -171,9 +211,9 @@
     @if (data.sections.certificates.visible) {
       <section class="section section-panel section-panel--soft" id="certificates" data-reveal>
         <div class="section-heading">
-          <p class="section-kicker">{{ data.sections.certificates.kicker }}</p>
-          <h2>{{ currentVariant().certificatesTitle }}</h2>
-          <p>{{ currentVariant().certificatesText }}</p>
+          <p class="section-kicker">{{ sectionText(data.sections.certificates, 'kicker') }}</p>
+          <h2>{{ text(currentVariant().certificatesTitle) }}</h2>
+          <p>{{ text(currentVariant().certificatesText) }}</p>
         </div>
 
         <div class="certificates-carousel" data-reveal>
@@ -209,8 +249,10 @@
                   </div>
 
                   <div class="certificate-card__body">
-                    <p class="certificate-card__meta">{{ item.issuer }} / {{ item.issued }}</p>
-                    <h3>{{ item.title }}</h3>
+                    <p class="certificate-card__meta">
+                      {{ text(item.issuer) }} / {{ periodText(item.issued) }}
+                    </p>
+                    <h3>{{ text(item.title) }}</h3>
 
                     <a
                       class="certificate-card__link"
@@ -218,7 +260,7 @@
                       target="_blank"
                       rel="noreferrer"
                     >
-                      {{ item.linkLabel || 'Descargar certificado' }}
+                      {{ text(item.linkLabel || 'Descargar certificado') }}
                     </a>
                   </div>
                 </article>
@@ -253,71 +295,97 @@
     @if (data.sections.education.visible) {
       <section class="section section-panel section-panel--bright" id="education" data-reveal>
         <div class="section-heading">
-          <p class="section-kicker">{{ data.sections.education.kicker }}</p>
-          <h2>Recorrido academico.</h2>
-          <p>
-            Estudios universitarios, maestria y certificaciones ordenadas por fecha para ver como
-            fue creciendo mi perfil tecnico.
-          </p>
+          <p class="section-kicker">{{ sectionText(data.sections.education, 'kicker') }}</p>
+          <h2>{{ text('Educacion y certificaciones.') }}</h2>
+          
         </div>
 
-        <div
-          class="education-timeline-shell"
-          data-reveal
-          [style.--timeline-glow-cycle]="educationTimelineGlowCycle()"
-        >
-          <div class="education-timeline-shell__meta">
-            @for (year of educationTimelineYears(); track year) {
-              <span>{{ year }}</span>
-            }
-          </div>
-
-          <div class="education-timeline">
-            <div class="education-timeline__axis"></div>
-
-            @for (year of educationTimelineYears(); track year; let index = $index) {
-              <span
-                class="education-timeline__tick"
-                [style.left.%]="(index / (educationTimelineYears().length - 1)) * 100"
-              ></span>
-            }
-
-            @for (item of visibleEducationTimeline(); track item.title + item.period; let index = $index) {
-              <article
-                class="education-timeline__item"
-                [class.education-timeline__item--range]="item.kind === 'range'"
-                [class.education-timeline__item--milestone]="item.kind === 'milestone'"
-                [class.education-timeline__item--highlight]="item.accent === 'highlight'"
-                [class.education-timeline__item--default]="item.accent === 'default'"
-                [style.left.%]="item.startPct"
-                [style.width.%]="item.kind === 'range' ? item.widthPct : null"
-                [style.--timeline-lane]="item.lane"
-                [style.--timeline-offset.rem]="item.offsetRem"
-                [style.--timeline-offset-abs.rem]="item.offsetAbsRem"
-                [style.--timeline-side]="item.side"
-                [style.--timeline-start-order]="item.startGlowOrder"
-                [style.--timeline-end-order]="item.endGlowOrder"
+        <div class="education-list" data-reveal>
+          @for (item of displayedEducation(); track item.id; let index = $index) {
+            <article
+              class="education-entry"
+              data-reveal
+              [class.education-entry--open]="isEducationOpen(item.id, index)"
+              [class.education-entry--featured]="item.badges?.includes('REMARKABLE')"
+              [class.education-entry--language]="item.type === 'LANGUAGES'"
+            >
+              <button
+                type="button"
+                class="education-entry__summary"
+                (click)="toggleEducation(item.id)"
+                [attr.aria-expanded]="isEducationOpen(item.id, index)"
               >
-                <span class="education-timeline__node"></span>
-                <span class="education-timeline__bar">
-                  <strong>{{ item.title }}</strong>
+                <span class="education-entry__marker">
+                  <span>{{ text(item.type) }}</span>
                 </span>
-                <div class="education-timeline__tooltip panel-card">
-                  <div class="education-timeline__eyebrow">
-                    <span>{{ item.type }}</span>
-                    <span>{{ item.duration }}</span>
-                  </div>
+                <span class="education-entry__title">
+                  <strong>{{ text(item.title) }}</strong>
+                  <small>{{ text(item.issuer) }}</small>
+                </span>
+                <span class="education-entry__period">{{ periodText(item.period) }}</span>
+                <span class="education-entry__toggle">
+                  {{ isEducationOpen(item.id, index) ? '-' : '+' }}
+                </span>
+              </button>
 
-                  <h3>{{ item.title }}</h3>
-                  <p>{{ item.issuer }}</p>
+              @if (isEducationOpen(item.id, index)) {
+                <div class="education-entry__panel">
+                  <div class="education-entry__content">
+                    <div class="education-entry__details">
+                      <div class="education-entry__meta">
+                        <span>{{ text(item.type) }}</span>
+                        @if (item.duration) {
+                          <span>{{ durationText(item.duration) }}</span>
+                        }
+                      </div>
 
-                  <div class="education-timeline__rail">
-                    <span class="education-timeline__rail-start">{{ item.rangeLabel }}</span>
+                      <h3>{{ text(item.title) }}</h3>
+                      <p>{{ text(item.description || item.issuer) }}</p>
+
+                      @if (visibleEducationBadges(item).length) {
+                        <div class="tag-list">
+                          @for (badge of visibleEducationBadges(item); track badge) {
+                            <span>{{ text(badge) }}</span>
+                          }
+                        </div>
+                      }
+                    </div>
+
+                    @if (item.assetBase) {
+                      <figure class="education-entry__certificate">
+                        <img
+                          [src]="certificateImageSrc({ assetBase: item.assetBase })"
+                          [alt]="item.alt || item.title"
+                        />
+                        <a
+                          class="certificate-card__link"
+                          [href]="certificatePdfHref({ assetBase: item.assetBase })"
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {{ text(item.linkLabel || 'Ver certificado') }}
+                        </a>
+                      </figure>
+                    }
                   </div>
                 </div>
-              </article>
-            }
-          </div>
+              }
+            </article>
+          }
+        </div>
+
+        <div class="education-actions">
+          @if (hasMoreEducation()) {
+            <button type="button" class="button button--ghost" (click)="showMoreEducation()">
+              {{ text('Mostrar mas') }}
+            </button>
+          }
+
+          @if (canCollapseEducation()) {
+            <button type="button" class="button button--ghost" (click)="collapseEducation()">
+              {{ text('Mostrar menos') }}
+            </button>
+          }
         </div>
       </section>
     }
@@ -325,9 +393,9 @@
     @if (data.sections.languages.visible) {
       <section class="section section-panel section-panel--bright" id="languages" data-reveal>
         <div class="section-heading">
-          <p class="section-kicker">{{ data.sections.languages.kicker }}</p>
-          <h2>{{ currentVariant().languagesTitle }}</h2>
-          <p>{{ currentVariant().languagesText }}</p>
+          <p class="section-kicker">{{ sectionText(data.sections.languages, 'kicker') }}</p>
+          <h2>{{ text(currentVariant().languagesTitle) }}</h2>
+          <p>{{ text(currentVariant().languagesText) }}</p>
         </div>
 
         @if (languageCertificates().length) {
@@ -344,9 +412,10 @@
 
                 <div class="certificate-card__body">
                   <p class="certificate-card__meta">
-                    {{ certificate.language }} / {{ certificate.issuer }} / {{ certificate.issued }}
+                    {{ text(certificate.language) }} / {{ text(certificate.issuer) }} /
+                    {{ periodText(certificate.issued) }}
                   </p>
-                  <h3>{{ certificate.title }}</h3>
+                  <h3>{{ text(certificate.title) }}</h3>
 
                   <a
                     class="certificate-card__link"
@@ -354,7 +423,7 @@
                     target="_blank"
                     rel="noreferrer"
                   >
-                    {{ certificate.linkLabel || 'Descargar certificado' }}
+                    {{ text(certificate.linkLabel || 'Descargar certificado') }}
                   </a>
                 </div>
               </article>
@@ -368,8 +437,8 @@
       <section class="section section-panel section-panel--soft" id="projects" data-reveal>
         <div class="section-heading section-heading--row">
           <div>
-            <p class="section-kicker">{{ data.sections.projects.kicker }}</p>
-            <h2>{{ currentVariant().projectsTitle }}</h2>
+            <p class="section-kicker">{{ sectionText(data.sections.projects, 'kicker') }}</p>
+            <h2>{{ text(currentVariant().projectsTitle) }}</h2>
           </div>
 
           <div class="filters" aria-label="Filtros de proyectos">
@@ -380,7 +449,7 @@
                 [class.filter-chip--active]="selectedCategory() === category"
                 (click)="selectCategory(category)"
               >
-                {{ category }}
+                {{ categoryText(category) }}
               </button>
             }
           </div>
@@ -398,21 +467,21 @@
                   />
                 }
 
-                <span>{{ project.category }}</span>
-                <strong>{{ project.year }}</strong>
+                <span>{{ categoryText(project.category) }}</span>
+                <strong>{{ periodText(project.year) }}</strong>
               </div>
 
               <div class="project-card__body">
-                <h3>{{ project.title }}</h3>
-                <p>{{ project.summary }}</p>
+                <h3>{{ text(project.title) }}</h3>
+                <p>{{ text(project.summary) }}</p>
 
                 <div class="tag-list">
                   @for (tag of project.stack; track tag) {
-                    <span>{{ tag }}</span>
+                    <span>{{ text(tag) }}</span>
                   }
                 </div>
 
-                <a [href]="project.link">{{ project.linkLabel }}</a>
+                <a [href]="project.link">{{ text(project.linkLabel) }}</a>
               </div>
             </article>
           }
@@ -423,12 +492,9 @@
     @if (data.sections.research.visible) {
       <section class="section section-panel section-panel--bright" id="research" data-reveal>
         <div class="section-heading">
-          <p class="section-kicker">{{ data.sections.research.kicker }}</p>
-          <h2>Investigacion y publicaciones.</h2>
-          <p>
-            Articulos publicados y trabajos de investigacion separados de los proyectos de desarrollo
-            para mostrar su alcance academico y tecnico.
-          </p>
+          <p class="section-kicker">{{ sectionText(data.sections.research, 'kicker') }}</p>
+          <h2>{{ text('Investigacion y publicaciones.') }}</h2>
+         
         </div>
 
         <div class="projects-grid">
@@ -443,21 +509,23 @@
                   />
                 }
 
-                <span>Investigacion</span>
+                <span>{{ text('Investigacion') }}</span>
                 <strong>{{ item.year }}</strong>
               </div>
 
               <div class="project-card__body">
-                <h3>{{ item.title }}</h3>
-                <p>{{ item.summary }}</p>
+                <h3>{{ text(item.title) }}</h3>
+                <p>{{ text(item.summary) }}</p>
 
                 <div class="tag-list">
                   @for (tag of item.stack; track tag) {
-                    <span>{{ tag }}</span>
+                    <span>{{ text(tag) }}</span>
                   }
                 </div>
 
-                <a [href]="item.link" target="_blank" rel="noreferrer">{{ item.linkLabel }}</a>
+                <a [href]="item.link" target="_blank" rel="noreferrer">
+                  {{ text(item.linkLabel) }}
+                </a>
               </div>
             </article>
           }
@@ -468,9 +536,9 @@
     @if (data.sections.experience.visible) {
       <section class="section section-panel section-panel--deep" id="experience" data-reveal>
         <div class="section-heading">
-          <p class="section-kicker">{{ data.sections.experience.kicker }}</p>
-          <h2>{{ currentVariant().experienceTitle }}</h2>
-          <p>{{ currentVariant().experienceText }}</p>
+          <p class="section-kicker">{{ sectionText(data.sections.experience, 'kicker') }}</p>
+          <h2>{{ text(currentVariant().experienceTitle) }}</h2>
+          <p>{{ text(currentVariant().experienceText) }}</p>
         </div>
 
         <div class="timeline">
@@ -494,11 +562,11 @@
                   }
 
                   <span class="experience-entry__title">
-                    <strong>{{ item.role }}</strong>
+                    <strong>{{ text(item.role) }}</strong>
                     <small>{{ item.company }}</small>
                   </span>
                 </span>
-                <span class="experience-entry__period">{{ item.period }}</span>
+                <span class="experience-entry__period">{{ periodText(item.period) }}</span>
                 <span class="experience-entry__toggle">
                   {{ isExperienceOpen(item.id, index) ? '-' : '+' }}
                 </span>
@@ -509,23 +577,23 @@
                   <div class="experience-entry__content">
                     <div class="experience-entry__details">
                       <div class="experience-entry__meta">
-                        <span>{{ item.location }}</span>
+                        <span>{{ text(item.location) }}</span>
                         <a [href]="item.website" target="_blank" rel="noreferrer">
-                          {{ item.websiteLabel }}
+                          {{ text(item.websiteLabel) }}
                         </a>
                       </div>
 
-                      <p class="experience-entry__text">{{ item.summary }}</p>
+                      <p class="experience-entry__text">{{ text(item.summary) }}</p>
 
                       <ul class="experience-entry__list">
                         @for (achievement of item.achievements; track achievement) {
-                          <li>{{ achievement }}</li>
+                          <li>{{ text(achievement) }}</li>
                         }
                       </ul>
 
                       <div class="tag-list">
                         @for (tag of item.stack; track tag) {
-                          <span>{{ tag }}</span>
+                          <span>{{ text(tag) }}</span>
                         }
                       </div>
                     </div>
@@ -547,19 +615,16 @@
     @if (data.sections.contact.visible) {
       <section class="contact section section-panel section-panel--bright" id="contact" data-reveal>
         <div class="contact__copy">
-          <p class="section-kicker">{{ data.sections.contact.kicker }}</p>
-          <h2>{{ data.contact.headline }}</h2>
-          <p>{{ data.contact.text }}</p>
-          <a class="contact__email" [href]="'mailto:' + data.profile.email">
-            {{ data.profile.email }}
-          </a>
+          <p class="section-kicker">{{ sectionText(data.sections.contact, 'kicker') }}</p>
+          <h2>{{ text(data.contact.headline) }}</h2>
+          <p>{{ text(data.contact.text) }}</p>
         </div>
 
         <div class="contact__links">
           @for (link of data.contact.links; track link.label) {
             <a class="contact__link" [href]="link.href" target="_blank" rel="noreferrer">
               <span>{{ link.label }}</span>
-              <strong>Ir</strong>
+              <strong>{{ actionText(link) }}</strong>
             </a>
           }
         </div>
@@ -568,6 +633,6 @@
   </main>
 
   <footer class="site-footer">
-    <p>© 2026 Favio Guevara. Todos los derechos reservados.</p>
+    <p>© 2026 Favio Guevara. {{ footerText() }}</p>
   </footer>
 </div>

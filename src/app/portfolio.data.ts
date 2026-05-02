@@ -145,42 +145,42 @@ export const portfolioData = {
       id: 'certificates',
       navLabel: 'Certificados',
       kicker: '01 / Certificados',
-      visible: true,
+      visible: false,
     },
     education: {
       id: 'education',
-      navLabel: 'Estudios',
-      kicker: '02 / Estudios',
+      navLabel: 'Educacion',
+      kicker: '01 / Educacion',
       visible: true,
     },
     languages: {
       id: 'languages',
       navLabel: 'Idiomas',
-      kicker: '03 / Idiomas',
+      kicker: '02 / Idiomas',
       visible: true,
     },
     projects: {
       id: 'projects',
       navLabel: 'Proyectos',
-      kicker: '04 / Proyectos',
+      kicker: '03 / Proyectos',
       visible: true,
     },
     research: {
       id: 'research',
       navLabel: 'Investigacion',
-      kicker: '05 / Investigacion',
+      kicker: '04 / Investigacion',
       visible: true,
     },
     experience: {
       id: 'experience',
       navLabel: 'Experiencia',
-      kicker: '06 / Experiencia',
+      kicker: '05 / Experiencia',
       visible: true,
     },
     contact: {
       id: 'contact',
       navLabel: 'Contacto',
-      kicker: '07 / Contacto',
+      kicker: '06 / Contacto',
       visible: true,
     },
   } satisfies Record<SectionId, SectionConfig>,
@@ -209,8 +209,7 @@ export const portfolioData = {
         'Disponible para desarrollo web, backend, integracion de APIs y mantenimiento evolutivo de sistemas.',
       floatingNav: [
         { code: 'fn', label: 'home()', target: 'home' },
-        { code: 'cert', label: 'certificates', target: 'certificates' },
-        { code: 'edu', label: 'studies', target: 'education' },
+        { code: 'edu', label: 'education', target: 'education' },
         { code: 'lang', label: 'languages', target: 'languages' },
         { code: 'map', label: 'projects', target: 'projects' },
         { code: 'pub', label: 'research', target: 'research' },
@@ -229,12 +228,12 @@ export const portfolioData = {
       certificatesText:
         'Formacion en desarrollo full stack, arquitectura basada en microservicios, Angular, .NET, PHP y practicas de construccion de sistemas empresariales.',
       projectsTitle: 'Aplicaciones, APIs y soluciones web.',
-      languagesTitle: 'Idiomas para colaborar en entornos tecnicos.',
+      languagesTitle: 'Idiomas.',
       languagesText:
-        'Capacidad para trabajar con documentacion tecnica, equipos multidisciplinarios y comunicacion profesional en espanol, ingles y portugues.',
-      experienceTitle: 'Experiencia enfocada en desarrollo de software.',
+        'Espanol, ingles y portugues para documentacion tecnica, reuniones y trabajo con equipos diversos.',
+      experienceTitle: 'Experiencia en software.',
       experienceText:
-        'Este modo prioriza aplicaciones web, frontend, backend, APIs, bases de datos, integraciones y mantenimiento evolutivo de sistemas.',
+        'He trabajado construyendo y manteniendo aplicaciones web, APIs, integraciones y bases de datos en entornos reales.',
     },
     BIGDATA: {
       mode: 'BIGDATA',
@@ -247,8 +246,7 @@ export const portfolioData = {
         'Disponible para BI, dashboards, ETL, reporting, analisis de datos y optimizacion de consultas.',
       floatingNav: [
         { code: 'sql', label: 'select home', target: 'home' },
-        { code: 'cert', label: 'certificates', target: 'certificates' },
-        { code: 'edu', label: 'studies', target: 'education' },
+        { code: 'edu', label: 'education', target: 'education' },
         { code: 'lang', label: 'languages', target: 'languages' },
         { code: 'scan', label: 'projects', target: 'projects' },
         { code: 'pub', label: 'research', target: 'research' },
@@ -266,12 +264,12 @@ export const portfolioData = {
       certificatesText:
         'Formacion en SQL Server, Oracle PL/SQL, PowerBI, Business Analytics, Python aplicado a Data Science y administracion de bases de datos.',
       projectsTitle: 'Casos de BI, datos e ingenieria de datos.',
-      languagesTitle: 'Idiomas para analisis, reportes y trabajo colaborativo.',
+      languagesTitle: 'Idiomas.',
       languagesText:
-        'Idiomas utiles para lectura tecnica, documentacion, presentaciones y colaboracion con equipos o fuentes internacionales.',
-      experienceTitle: 'Experiencia enfocada en datos y analitica.',
+        'Espanol, ingles y portugues para lectura tecnica, documentacion, presentaciones y colaboracion.',
+      experienceTitle: 'Experiencia en datos.',
       experienceText:
-        'Este modo prioriza migracion de datos, SQL, dashboards, automatizacion, reporting, BI y analisis para toma de decisiones.',
+        'He participado en migracion de datos, consultas SQL, dashboards, automatizacion y reporting para apoyar decisiones.',
     },
   } satisfies Record<ProfileMode, ProfileVariant>,
   stats: [
@@ -448,6 +446,16 @@ export const portfolioData = {
   ] satisfies CertificateItem[],
   education: [
     {
+      title: 'Bachiller en Ingenieria Informatica',
+      issuer: 'Universidad Nacional Federico Villarreal',
+      period: '15/04/2018 - 30/03/2023',
+      type: 'Grado academico',
+      duration: '5 anos academicos',
+      badges: ['REMARKABLE', 'BACHILLER AUTOMATICO'],
+      kind: 'range',
+      tag: 'BOTH',
+    },
+    {
       title: 'Ingenieria Informatica',
       issuer: 'Universidad Nacional Federico Villarreal',
       period: '15/04/2018 - 30/03/2023',
@@ -463,17 +471,13 @@ export const portfolioData = {
       period: '05/08/2024 - Actualidad',
       type: 'Maestria',
       duration: 'En curso',
-      badges: ['IN PROGRESS'],
+      badges: ['EN CURSO','REMARKABLE'],
       kind: 'range',
       tag: 'BOTH',
     },
   ] satisfies EducationItem[],
   languages: [
-    {
-      name: 'Espanol',
-      level: 'Lengua materna',
-      context: 'Comunicacion profesional, documentacion y presentaciones.',
-    },
+   
     {
       name: 'Ingles',
       level: 'Avanzado - B2',
@@ -792,13 +796,13 @@ export const portfolioData = {
     },
   ] satisfies ExperienceItem[],
   contact: {
-    headline: 'Trabajemos juntos en soluciones web, backend, datos y BI',
+    headline: 'Conversemos sobre tu proximo proyecto',
     text:
-      'Soy Favio Jesus Guevara Puente, desarrollador full stack y analista BI con experiencia en aplicaciones web, APIs, bases de datos, dashboards y automatizacion de procesos.',
+      'Puedo ayudarte a construir aplicaciones web, integrar APIs, ordenar datos o convertir informacion en dashboards utiles para el equipo.',
     links: [
       { label: 'Email', href: 'mailto:faviogpfk@gmail.com' },
-      { label: 'LinkedIn', href: 'https://www.linkedin.com/in/faviojguevara/' },
-      { label: 'Portafolio', href: 'https://faviojguevara.com/' },
+      { label: 'LinkedIn', href: 'https://www.linkedin.com/in/faviojguevara/' }
+    
     ],
   },
 } as const;
