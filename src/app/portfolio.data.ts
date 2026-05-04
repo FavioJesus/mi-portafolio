@@ -581,7 +581,7 @@ export const portfolioData = {
       linkLabel: 'Ver experiencia',
       link: '#experience',
       image: {
-        src: '/assets/projects/dashboards-reporting-bi.jpg',
+        src: '/assets/projects/PCM-PCM.png',
         alt: 'Preview de dashboards y reporting para gestion institucional',
       },
       tag: 'BIGDATA',
@@ -596,7 +596,7 @@ export const portfolioData = {
       linkLabel: 'Ver experiencia',
       link: '#experience',
       image: {
-        src: '/assets/projects/migracion-datos-sql-server.jpg',
+        src: '/assets/projects/PCM-PCM.png',
         alt: 'Preview de migracion y automatizacion de datos en SQL Server',
       },
       tag: 'BIGDATA',
@@ -611,7 +611,7 @@ export const portfolioData = {
       linkLabel: 'Ver experiencia',
       link: '#experience',
       image: {
-        src: '/assets/projects/scanntech-kpis-sql.jpg',
+        src: '/assets/logos/SCANNTECH.png',
         alt: 'Preview de KPIs empresariales con SQL experto',
       },
       tag: 'BIGDATA',
@@ -626,7 +626,7 @@ export const portfolioData = {
       linkLabel: 'Ver experiencia',
       link: '#experience',
       image: {
-        src: '/assets/projects/scanntech-bigdata-ingesta.jpg',
+        src: '/assets/logos/SCANNTECH.png',
         alt: 'Preview de ingesta y transformacion macro de datos',
       },
       tag: 'BIGDATA',
