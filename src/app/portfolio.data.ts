@@ -290,6 +290,15 @@ export const portfolioData = {
       tag: 'BOTH',
     },
     {
+      title: 'Diplomado de Postgrado en DATA SCIENCE',
+      issuer: 'Universidad Nacional de Ingeniería',
+      issued: '15/08/2024 - 20/08/2025',
+      assetBase: '/assets/certificates/diplomado-uni-ds',
+      alt: 'Diplomado de Postgrado en DATA SCIENCE',
+      linkLabel: 'Ver certificado',
+      tag: 'BOTH',
+    },
+     {
       title: 'NET 9 Microservicios',
       issuer: 'Udemy',
       issued: '01/02/2026 - 28/04/2026',
