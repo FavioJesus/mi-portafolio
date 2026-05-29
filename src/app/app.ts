@@ -9,6 +9,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 
 import {
   EducationItem,
@@ -224,6 +225,7 @@ const EN_TRANSLATIONS: Record<string, string> = {
 
 @Component({
   selector: 'app-root',
+  imports: [RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
@@ -231,9 +233,11 @@ export class App implements AfterViewInit {
   private readonly host = inject(ElementRef<HTMLElement>);
   private readonly renderer = inject(Renderer2);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly router = inject(Router);
   private revealObserver?: IntersectionObserver;
 
   protected readonly data = portfolioData;
+  protected readonly currentRoute = signal('');
   protected readonly currentProfile = signal<ProfileMode>('SOFTWARE');
   protected readonly currentLanguage = signal<LanguageMode>('ES');
   protected readonly selectedCategory = signal<ProjectCategory>('Todos');
@@ -247,6 +251,7 @@ export class App implements AfterViewInit {
   protected readonly cursorY = signal(0);
   protected readonly showCursor = signal(false);
   protected readonly cursorPressed = signal(false);
+  protected readonly showRoutedPage = computed(() => this.currentRoute().startsWith('/pedidos'));
 
   protected readonly currentVariant = computed(
     () => this.data.variants[this.currentProfile()],
@@ -358,6 +363,18 @@ export class App implements AfterViewInit {
   protected readonly visibleResearch = computed<ResearchItem[]>(() =>
     this.data.research.filter((item) => this.matchesProfile(item.tag)),
   );
+
+  constructor() {
+    this.currentRoute.set(this.router.url.split('?')[0] || '/');
+
+    const routerSubscription = this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.currentRoute.set(event.urlAfterRedirects.split('?')[0] || '/');
+      }
+    });
+
+    this.destroyRef.onDestroy(() => routerSubscription.unsubscribe());
+  }
 
   protected readonly visibleExperience = computed(() =>
     this.data.experience.filter((item) => this.matchesProfile(item.tag)),

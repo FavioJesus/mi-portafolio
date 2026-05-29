@@ -1,3 +1,6 @@
+@if (showRoutedPage()) {
+  <router-outlet />
+} @else {
 <div
   class="page-shell"
   [class.page-shell--software]="currentProfile() === 'SOFTWARE'"
@@ -636,3 +639,4 @@
     <p>© 2026 Favio Guevara. {{ footerText() }}</p>
   </footer>
 </div>
+}

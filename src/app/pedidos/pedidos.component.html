@@ -1,0 +1,139 @@
+<main class="orders-page">
+  <section class="orders-hero">
+    <div>
+      <p class="orders-kicker">Pedidos</p>
+      <h1>Carta rapida</h1>
+      <p>
+        Selecciona algunos platos, genera una proforma y envia el pedido armado por WhatsApp.
+      </p>
+    </div>
+  </section>
+
+  <section class="orders-layout" aria-label="Carta de comidas">
+    <div class="menu-list">
+      @for (item of menuItems; track item.id) {
+        <article class="menu-item">
+          <div>
+            <span class="menu-item__category">{{ item.category }}</span>
+            <h2>{{ item.name }}</h2>
+            <p>{{ item.description }}</p>
+          </div>
+
+          <div class="menu-item__action">
+            <strong>{{ item.price | currency: 'PEN' : 'symbol-narrow' : '1.2-2' }}</strong>
+            <button type="button" (click)="addItem(item)">Agregar</button>
+          </div>
+        </article>
+      }
+    </div>
+
+    <aside class="order-summary" aria-label="Resumen del pedido">
+      <div class="order-summary__header">
+        <div>
+          <p class="orders-kicker">Proforma</p>
+          <h2>Tu pedido</h2>
+        </div>
+
+        @if (cart().length) {
+          <button class="ghost-button" type="button" (click)="clearCart()">Limpiar</button>
+        }
+      </div>
+
+      @if (cart().length) {
+        <div class="cart-list">
+          @for (item of cart(); track item.id) {
+            <div class="cart-item">
+              <div>
+                <strong>{{ item.name }}</strong>
+                <span>
+                  {{ item.quantity }} x
+                  {{ item.price | currency: 'PEN' : 'symbol-narrow' : '1.2-2' }}
+                </span>
+              </div>
+
+              <div class="cart-item__controls">
+                <button type="button" aria-label="Quitar una unidad" (click)="removeItem(item.id)">
+                  -
+                </button>
+                <span>{{ item.quantity }}</span>
+                <button type="button" aria-label="Agregar una unidad" (click)="addItem(item)">
+                  +
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="order-total">
+          <span>Total</span>
+          <strong>{{ total() | currency: 'PEN' : 'symbol-narrow' : '1.2-2' }}</strong>
+        </div>
+
+        <button class="primary-button" type="button" (click)="generateProforma()">
+          Generar proforma
+        </button>
+      } @else {
+        <p class="empty-state">Agrega platos de la carta para armar una proforma de prueba.</p>
+      }
+
+      @if (showProforma() && cart().length) {
+        <div class="proforma">
+          <div class="receipt">
+            <div class="receipt__header">
+              <div>
+                <span>Restaurant Demo</span>
+                <h3>Proforma de pedido</h3>
+              </div>
+
+              <div class="receipt__meta">
+                <strong>{{ receiptNumber() }}</strong>
+                <span>{{ generatedAt() }}</span>
+              </div>
+            </div>
+
+            <div class="receipt__table">
+              <div class="receipt__row receipt__row--head">
+                <span>Detalle</span>
+                <span>Cant.</span>
+                <span>Importe</span>
+              </div>
+
+              @for (item of cart(); track item.id) {
+                <div class="receipt__row">
+                  <span>{{ item.name }}</span>
+                  <span>{{ item.quantity }}</span>
+                  <span>{{ item.price * item.quantity | currency: 'PEN' : 'symbol-narrow' : '1.2-2' }}</span>
+                </div>
+              }
+            </div>
+
+            <div class="receipt__total">
+              <span>Total proforma</span>
+              <strong>{{ total() | currency: 'PEN' : 'symbol-narrow' : '1.2-2' }}</strong>
+            </div>
+
+            <div class="receipt__payment">
+              <img [src]="qrPath" alt="QR para pagar pedido" />
+              <div>
+                <strong>Pago por QR</strong>
+                <p>Esta boleta es una proforma de prueba. Confirma el pedido por WhatsApp.</p>
+              </div>
+            </div>
+          </div>
+
+          <button class="whatsapp-button" type="button" (click)="shareReceipt()">
+            Compartir boleta por WhatsApp
+          </button>
+
+          <button class="ghost-button ghost-button--wide" type="button" (click)="printReceipt()">
+            Guardar como PDF
+          </button>
+
+          @if (shareStatus()) {
+            <p class="share-status">{{ shareStatus() }}</p>
+          }
+        </div>
+      }
+    </aside>
+  </section>
+</main>
