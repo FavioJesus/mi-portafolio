@@ -65,3 +65,34 @@ Component update sent to client(s).
 Application bundle generation complete. [0.198 seconds] - 2026-05-29T00:22:25.063Z
 
 Component update sent to client(s).
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.195 seconds] - 2026-05-29T00:33:48.233Z
+
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.188 seconds] - 2026-05-29T00:33:59.242Z
+
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+Application bundle generation failed. [0.179 seconds] - 2026-05-29T00:34:05.342Z
+
+[33m>[39m Changes detected. Rebuilding...
+[32m√[39m Changes detected. Rebuilding...
+[35mBrowser bundles[39m     
+[1mInitial chunk files[22m [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mmain.js[39m             [2m | [22m[2mmain[22m            [2m | [22m[36m317.10 kB[39m[2m | [22m
+[32mstyles.css[39m          [2m | [22m[2mstyles[22m          [2m | [22m[36m537 bytes[39m[2m | [22m
+
+[1m [22m                   [2m | [22m[1mInitial total[22m   [2m | [22m[1m317.63 kB[22m
+
+
+[35mServer bundles[39m      
+[1mInitial chunk files[22m [2m | [22m[1mNames[22m           [2m | [22m [1mRaw size[22m
+[32mmain.server.mjs[39m     [2m | [22m[2mmain.server[22m     [2m | [22m[36m317.69 kB[39m[2m | [22m
+[32mserver.mjs[39m          [2m | [22m[2mserver[22m          [2m | [22m  [36m1.84 kB[39m[2m | [22m
+[32mpolyfills.server.mjs[39m[2m | [22m[2mpolyfills.server[22m[2m | [22m[36m268 bytes[39m[2m | [22m
+
+Application bundle generation complete. [0.173 seconds] - 2026-05-29T00:34:25.860Z
+
+Page reload sent to client(s).

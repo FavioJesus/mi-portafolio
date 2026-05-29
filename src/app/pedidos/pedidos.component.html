@@ -121,8 +121,12 @@
             </div>
           </div>
 
-          <button class="whatsapp-button" type="button" (click)="shareReceipt()">
-            Compartir boleta por WhatsApp
+          <button class="whatsapp-button" type="button" (click)="shareReceiptPdf()">
+            Compartir PDF por WhatsApp
+          </button>
+
+          <button class="secondary-button" type="button" (click)="shareReceiptImage()">
+            Compartir imagen
           </button>
 
           <button class="ghost-button ghost-button--wide" type="button" (click)="printReceipt()">

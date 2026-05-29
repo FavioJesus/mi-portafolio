@@ -1,0 +1,59 @@
+[1m[31mERROR: Bad Request ("http://localhost:4200/pedidos").
+URL with hostname "localhost" is not allowed.
+
+For more information, see https://angular.dev/best-practices/security#preventing-server-side-request-forgery-ssrf[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2551: Property 'shareReceipt' does not exist on type 'PedidosComponent'. Did you mean 'shareReceiptPdf'?[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pedidos/pedidos.component.html:124:65:
+[37m      124 │ ...n class="whatsapp-button" type="button" (click)="[32mshareReceipt[37m()">
+          ╵                                                     [32m~~~~~~~~~~~~[0m
+
+  Error occurs in the template of component PedidosComponent.
+
+    src/app/pedidos/pedidos.component.ts:64:15:
+[37m      64 │   templateUrl: [32m'./pedidos.component.html'[37m,
+         ╵                [32m~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+
+[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type 'Uint8Array<ArrayBufferLike>[]' is not assignable to parameter of type 'BlobPart[]'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+    Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+      Types of property 'buffer' are incompatible.
+        Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+          Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+            Types of property '[Symbol.toStringTag]' are incompatible.
+              Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pedidos/pedidos.component.ts:462:20:
+[37m      462 │     return new Blob([32mparts[37m, { type: 'application/pdf' });
+          ╵                     [32m~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type 'Uint8Array<ArrayBufferLike>[]' is not assignable to parameter of type 'BlobPart[]'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+    Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+      Types of property 'buffer' are incompatible.
+        Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+          Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+            Types of property '[Symbol.toStringTag]' are incompatible.
+              Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pedidos/pedidos.component.ts:462:20:
+[37m      462 │     return new Blob([32mparts[37m, { type: 'application/pdf' });
+          ╵                     [32m~~~~~[0m
+
+[39m[22m
+[1m[31m[31mX [41;31m[[41;97mERROR[41;31m][0m [1mTS2345: Argument of type 'Uint8Array<ArrayBufferLike>[]' is not assignable to parameter of type 'BlobPart[]'.
+  Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'BlobPart'.
+    Type 'Uint8Array<ArrayBufferLike>' is not assignable to type 'ArrayBufferView<ArrayBuffer>'.
+      Types of property 'buffer' are incompatible.
+        Type 'ArrayBufferLike' is not assignable to type 'ArrayBuffer'.
+          Type 'SharedArrayBuffer' is not assignable to type 'ArrayBuffer'.
+            Types of property '[Symbol.toStringTag]' are incompatible.
+              Type '"SharedArrayBuffer"' is not assignable to type '"ArrayBuffer"'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/pedidos/pedidos.component.ts:462:20:
+[37m      462 │     return new Blob([32mparts[37m, { type: 'application/pdf' });
+          ╵                     [32m~~~~~[0m
+
+[39m[22m

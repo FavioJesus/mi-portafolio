@@ -100,6 +100,10 @@ export class PedidosComponent {
     `proforma-${this.receiptNumber() || 'pedido'}.png`,
   );
 
+  protected readonly receiptPdfFileName = computed(() =>
+    `proforma-${this.receiptNumber() || 'pedido'}.pdf`,
+  );
+
   protected addItem(item: MenuItem): void {
     this.showProforma.set(false);
     this.shareStatus.set('');
@@ -156,7 +160,7 @@ export class PedidosComponent {
     this.showProforma.set(true);
   }
 
-  protected async shareReceipt(): Promise<void> {
+  protected async shareReceiptImage(): Promise<void> {
     if (!this.cart().length) {
       return;
     }
@@ -194,11 +198,94 @@ export class PedidosComponent {
     }
   }
 
+  protected async shareReceiptPdf(): Promise<void> {
+    if (!this.cart().length) {
+      return;
+    }
+
+    if (!this.showProforma()) {
+      this.generateProforma();
+    }
+
+    this.shareStatus.set('Generando PDF de la boleta...');
+
+    try {
+      const blob = await this.createReceiptPdfBlob();
+      const file = new File([blob], this.receiptPdfFileName(), { type: 'application/pdf' });
+      const nav = navigator as Navigator & {
+        canShare?: (data: ShareData) => boolean;
+        share?: (data: ShareData) => Promise<void>;
+      };
+
+      if (nav.share && (!nav.canShare || nav.canShare({ files: [file] }))) {
+        await nav.share({
+          title: 'Proforma de pedido',
+          text: 'Hola, quiero hacer este pedido. Te comparto mi proforma en PDF.',
+          files: [file],
+        });
+        this.shareStatus.set('PDF listo para enviar.');
+        return;
+      }
+
+      this.downloadBlob(blob, this.receiptPdfFileName());
+      window.open(this.whatsappHref(), '_blank', 'noopener');
+      this.shareStatus.set('Descargue el PDF y abri WhatsApp con el pedido.');
+    } catch {
+      window.open(this.whatsappHref(), '_blank', 'noopener');
+      this.shareStatus.set('No se pudo crear el PDF. Abri WhatsApp con el pedido en texto.');
+    }
+  }
+
   protected printReceipt(): void {
     window.print();
   }
 
   private async createReceiptBlob(): Promise<Blob> {
+    const canvas = await this.createReceiptCanvas();
+
+    return new Promise((resolve, reject) => {
+      canvas.toBlob((blob) => {
+        if (blob) {
+          resolve(blob);
+          return;
+        }
+
+        reject(new Error('No se pudo generar la imagen'));
+      }, 'image/png');
+    });
+  }
+
+  private async createReceiptPdfBlob(): Promise<Blob> {
+    const canvas = await this.createReceiptCanvas();
+    const imageBytes = this.base64ToBytes(canvas.toDataURL('image/jpeg', 0.92).split(',')[1]);
+    const pageWidth = 595.28;
+    const pageHeight = 841.89;
+    const margin = 32;
+    const imageWidth = pageWidth - margin * 2;
+    const imageHeight = Math.min(
+      pageHeight - margin * 2,
+      imageWidth * (canvas.height / canvas.width),
+    );
+    const imageX = margin;
+    const imageY = pageHeight - margin - imageHeight;
+    const content = `q\n${imageWidth.toFixed(2)} 0 0 ${imageHeight.toFixed(2)} ${imageX.toFixed(2)} ${imageY.toFixed(2)} cm\n/Im0 Do\nQ`;
+
+    const objects = [
+      '<< /Type /Catalog /Pages 2 0 R >>',
+      '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+      `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidth} ${pageHeight}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>`,
+      {
+        header: `<< /Type /XObject /Subtype /Image /Width ${canvas.width} /Height ${canvas.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${imageBytes.length} >>\nstream\n`,
+        bytes: imageBytes,
+        footer: '\nendstream',
+      },
+      `<< /Length ${content.length} >>\nstream\n${content}\nendstream`,
+    ];
+
+    return this.buildPdf(objects);
+  }
+
+  private async createReceiptCanvas(): Promise<HTMLCanvasElement> {
     const canvas = document.createElement('canvas');
     const width = 900;
     const padding = 56;
@@ -278,23 +365,14 @@ export class PedidosComponent {
     context.fillStyle = '#67594f';
     this.drawText(
       context,
-      'Esta proforma es una prueba. Envia esta imagen por WhatsApp para confirmar el pedido.',
+      'Esta proforma es una prueba. Envia esta boleta por WhatsApp para confirmar el pedido.',
       padding + qrSize + 54,
       y + 150,
       510,
       24,
     );
 
-    return new Promise((resolve, reject) => {
-      canvas.toBlob((blob) => {
-        if (blob) {
-          resolve(blob);
-          return;
-        }
-
-        reject(new Error('No se pudo generar la imagen'));
-      }, 'image/png');
-    });
+    return canvas;
   }
 
   private loadImage(src: string): Promise<HTMLImageElement> {
@@ -333,12 +411,78 @@ export class PedidosComponent {
     context.fillText(line, x, y);
   }
 
-  private downloadBlob(blob: Blob): void {
+  private buildPdf(
+    objects: Array<string | { header: string; bytes: Uint8Array; footer: string }>,
+  ): Blob {
+    const encoder = new TextEncoder();
+    const parts: Uint8Array[] = [];
+    const offsets: number[] = [];
+    let position = 0;
+
+    const appendText = (text: string): void => {
+      const bytes = encoder.encode(text);
+      parts.push(bytes);
+      position += bytes.length;
+    };
+
+    const appendBytes = (bytes: Uint8Array): void => {
+      parts.push(bytes);
+      position += bytes.length;
+    };
+
+    appendText('%PDF-1.4\n');
+
+    objects.forEach((object, index) => {
+      offsets.push(position);
+      appendText(`${index + 1} 0 obj\n`);
+
+      if (typeof object === 'string') {
+        appendText(`${object}\n`);
+      } else {
+        appendText(object.header);
+        appendBytes(object.bytes);
+        appendText(`${object.footer}\n`);
+      }
+
+      appendText('endobj\n');
+    });
+
+    const xrefPosition = position;
+    appendText(`xref\n0 ${objects.length + 1}\n`);
+    appendText('0000000000 65535 f \n');
+
+    for (const offset of offsets) {
+      appendText(`${offset.toString().padStart(10, '0')} 00000 n \n`);
+    }
+
+    appendText(
+      `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefPosition}\n%%EOF`,
+    );
+
+    const blobParts = parts.map(
+      (part) => part.buffer.slice(part.byteOffset, part.byteOffset + part.byteLength) as ArrayBuffer,
+    );
+
+    return new Blob(blobParts, { type: 'application/pdf' });
+  }
+
+  private base64ToBytes(base64: string): Uint8Array {
+    const binary = atob(base64);
+    const bytes = new Uint8Array(binary.length);
+
+    for (let index = 0; index < binary.length; index += 1) {
+      bytes[index] = binary.charCodeAt(index);
+    }
+
+    return bytes;
+  }
+
+  private downloadBlob(blob: Blob, fileName = this.receiptFileName()): void {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
 
     link.href = url;
-    link.download = this.receiptFileName();
+    link.download = fileName;
     link.click();
     URL.revokeObjectURL(url);
   }

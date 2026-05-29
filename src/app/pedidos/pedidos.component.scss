@@ -116,7 +116,8 @@
 }
 
 button,
-.whatsapp-button {
+.whatsapp-button,
+.secondary-button {
   min-height: 42px;
   border: 0;
   border-radius: 8px;
@@ -127,7 +128,8 @@ button,
 
 .menu-item__action button,
 .primary-button,
-.whatsapp-button {
+.whatsapp-button,
+.secondary-button {
   padding: 0 18px;
   color: #fff;
   background: #d15a2b;
@@ -209,7 +211,8 @@ button,
 }
 
 .primary-button,
-.whatsapp-button {
+.whatsapp-button,
+.secondary-button {
   display: inline-flex;
   width: 100%;
   align-items: center;
@@ -328,6 +331,11 @@ button,
 
 .whatsapp-button {
   background: #1f8f5f;
+}
+
+.secondary-button {
+  color: #1f4336;
+  background: #dff1e5;
 }
 
 .share-status {
