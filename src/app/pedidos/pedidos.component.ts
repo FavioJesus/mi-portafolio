@@ -58,6 +58,8 @@ const MENU_ITEMS: MenuItem[] = [
   },
 ];
 
+const WHATSAPP_PHONE = '51985650036';
+
 @Component({
   selector: 'app-pedidos',
   imports: [CurrencyPipe],
@@ -93,7 +95,7 @@ export class PedidosComponent {
       'Adjunto el pago por QR y quedo atento a la confirmacion.',
     ].join('\n');
 
-    return `https://wa.me/?text=${encodeURIComponent(message)}`;
+    return `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`;
   });
 
   protected readonly receiptFileName = computed(() =>
