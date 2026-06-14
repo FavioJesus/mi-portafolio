@@ -1,0 +1,74 @@
+/* ============================================================
+   TYPOGRAPHY — Portfolio Design System
+   Newsreader (serif display) · Geist (sans body) · Geist Mono
+   Fluid type scale tuned for an elegant, airy editorial feel.
+   ============================================================ */
+
+:root {
+  /* ---- Families ---- */
+  --font-serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-sans:  "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:  "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* ---- Weights ---- */
+  --fw-light:    300; /* @kind font */
+  --fw-regular:  400; /* @kind font */
+  --fw-medium:   500; /* @kind font */
+  --fw-semibold: 600; /* @kind font */
+  --fw-bold:     700; /* @kind font */
+
+  /* ---- Fluid display scale (serif) ---- */
+  /* hero name */
+  --fs-display:  clamp(3.25rem, 1.8rem + 6vw, 6.5rem); /* @kind other */
+  --fs-h1:       clamp(2.5rem, 1.6rem + 3.6vw, 4rem); /* @kind other */
+  --fs-h2:       clamp(1.9rem, 1.4rem + 2vw, 2.75rem); /* @kind other */
+  --fs-h3:       clamp(1.4rem, 1.15rem + 1vw, 1.85rem); /* @kind other */
+
+  /* ---- Body scale (sans) ---- */
+  --fs-lead:  clamp(1.15rem, 1.05rem + 0.5vw, 1.4rem); /* @kind other */
+  --fs-body:  1.0625rem;   /* 17px @kind font */
+  --fs-sm:    0.9375rem;   /* 15px @kind font */
+  --fs-xs:    0.8125rem;   /* 13px @kind font */
+
+  /* ---- Mono / eyebrow label ---- */
+  --fs-label: 0.75rem;     /* 12px, uppercase tracked @kind font */
+
+  /* ---- Line heights ---- */
+  --lh-tight:   1.05; /* @kind font */
+  --lh-snug:    1.2; /* @kind font */
+  --lh-normal:  1.5; /* @kind font */
+  --lh-relaxed: 1.7; /* @kind font */
+
+  /* ---- Tracking ---- */
+  --ls-tight:  -0.02em; /* @kind font */
+  --ls-normal: 0; /* @kind font */
+  --ls-label:  0.14em;   /* uppercase eyebrows @kind font */
+  --ls-wide:   0.04em; /* @kind font */
+}
+
+/* ---- Reusable type roles ---- */
+.t-display {
+  font-family: var(--font-serif);
+  font-weight: var(--fw-regular);
+  font-size: var(--fs-display);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  color: var(--text-strong);
+}
+.t-h1 { font-family: var(--font-serif); font-weight: var(--fw-regular); font-size: var(--fs-h1); line-height: var(--lh-snug); letter-spacing: var(--ls-tight); color: var(--text-strong); }
+.t-h2 { font-family: var(--font-serif); font-weight: var(--fw-regular); font-size: var(--fs-h2); line-height: var(--lh-snug); letter-spacing: var(--ls-tight); color: var(--text-strong); }
+.t-h3 { font-family: var(--font-serif); font-weight: var(--fw-medium); font-size: var(--fs-h3); line-height: var(--lh-snug); color: var(--text-strong); }
+
+.t-lead { font-family: var(--font-sans); font-weight: var(--fw-regular); font-size: var(--fs-lead); line-height: var(--lh-relaxed); color: var(--text-body); }
+.t-body { font-family: var(--font-sans); font-weight: var(--fw-regular); font-size: var(--fs-body); line-height: var(--lh-relaxed); color: var(--text-body); }
+.t-sm   { font-family: var(--font-sans); font-size: var(--fs-sm); line-height: var(--lh-normal); color: var(--text-muted); }
+
+.t-label {
+  font-family: var(--font-mono);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-label);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.t-mono { font-family: var(--font-mono); font-size: var(--fs-sm); letter-spacing: var(--ls-normal); color: var(--text-body); }

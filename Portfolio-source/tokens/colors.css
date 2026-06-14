@@ -1,0 +1,64 @@
+/* ============================================================
+   COLORS — Portfolio Design System
+   Cool, clean neutrals (near-black ink → paper white) plus a
+   single confident accent. Elegant, minimal, high-contrast.
+   ============================================================ */
+
+:root {
+  /* ---- Ink (neutral ramp, text + structure) ---- */
+  --ink-950: #0B0C0E;   /* deepest, hero text on light */
+  --ink-900: #131418;
+  --ink-800: #1E2026;
+  --ink-700: #2C2F36;
+  --ink-600: #474B54;
+  --ink-500: #5B5F69;   /* secondary text */
+  --ink-400: #868B96;   /* muted / captions */
+  --ink-300: #B6BAC3;   /* disabled, hairlines on dark */
+  --ink-200: #D7DAE0;
+  --ink-100: #E9EBEF;
+
+  /* ---- Paper (surfaces) ---- */
+  --paper:    #FFFFFF;  /* base canvas */
+  --paper-2:  #F7F8FA;  /* subtle raised / alternating section */
+  --paper-3:  #EEF0F3;  /* sunken wells, code blocks */
+  --line:     #E4E6EB;  /* hairline borders */
+  --line-strong: #D2D5DC;
+
+  /* ---- Accent (single brand color) ---- */
+  --accent:        #1A56DB;  /* cobalt — primary actions, links */
+  --accent-hover:  #1546B8;  /* pressed / hover darken */
+  --accent-soft:   #E8EEFC;  /* tinted fills, hover wells */
+  --accent-ink:    #0F317E;  /* accent text on soft */
+  --accent-contrast: #FFFFFF;/* text on solid accent */
+
+  /* ---- Semantic ---- */
+  --success:   #0E7C5A;
+  --success-soft: #E3F4ED;
+  --warning:   #B8770A;
+  --warning-soft: #FBF1DC;
+  --danger:    #C0362C;
+  --danger-soft: #FBE9E7;
+
+  /* ---- Semantic aliases (use these in components) ---- */
+  --text-strong:   var(--ink-950);
+  --text-body:     var(--ink-800);
+  --text-muted:    var(--ink-500);
+  --text-faint:    var(--ink-400);
+  --text-on-accent: var(--accent-contrast);
+  --link:          var(--accent);
+
+  --surface:        var(--paper);
+  --surface-raised: var(--paper-2);
+  --surface-sunken: var(--paper-3);
+  --surface-card:   var(--paper);
+  --border:         var(--line);
+  --border-strong:  var(--line-strong);
+
+  /* ---- Dark inversion (for footer / hero blocks) ---- */
+  --invert-bg:    #0B0C0E;
+  --invert-bg-2:  #15171C;
+  --invert-text:  #F4F5F7;
+  --invert-muted: #9AA0AB;
+  --invert-line:  #2A2D34;
+  --invert-accent: #6E92FF;  /* accent lifted for dark bg */
+}

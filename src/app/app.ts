@@ -40,6 +40,7 @@ type EducationDisplayItem = {
 
 const EDUCATION_PAGE_SIZE = 5;
 type LanguageMode = 'ES' | 'EN';
+type ThemeMode = 'light' | 'dark';
 
 const EN_TRANSLATIONS: Record<string, string> = {
   Inicio: 'Home',
@@ -240,6 +241,7 @@ export class App implements AfterViewInit {
   protected readonly currentRoute = signal('');
   protected readonly currentProfile = signal<ProfileMode>('SOFTWARE');
   protected readonly currentLanguage = signal<LanguageMode>('ES');
+  protected readonly currentTheme = signal<ThemeMode>('light');
   protected readonly selectedCategory = signal<ProjectCategory>('Todos');
   protected readonly showFloatingNav = signal(false);
   protected readonly activeEducationId = signal<string | null>(null);
@@ -247,11 +249,27 @@ export class App implements AfterViewInit {
   protected readonly educationVisibleCount = signal(EDUCATION_PAGE_SIZE);
   protected readonly mobileMenuOpen = signal(false);
   protected readonly activeCertificatePage = signal(0);
-  protected readonly cursorX = signal(0);
-  protected readonly cursorY = signal(0);
-  protected readonly showCursor = signal(false);
-  protected readonly cursorPressed = signal(false);
+  protected readonly profilePhotoFailed = signal(false);
   protected readonly showRoutedPage = computed(() => this.currentRoute().startsWith('/pedidos'));
+  protected readonly techStack = computed(() => [
+    { name: 'TypeScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg' },
+    { name: 'JavaScript', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg' },
+    { name: 'Angular', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original.svg' },
+    { name: '.NET', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dot-net/dot-net-original.svg' },
+    { name: 'C#', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/csharp/csharp-original.svg' },
+    { name: 'Java', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg' },
+    { name: 'Spring Boot', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg' },
+    { name: 'Python', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg' },
+    { name: 'Spark', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/apachespark/apachespark-original.svg' },
+    { name: 'Hadoop', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/hadoop/hadoop-original.svg' },
+    { name: 'SQL Server', icon: '/assets/icons/sql-server.png' },
+    { name: 'PostgreSQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg' },
+    { name: 'Oracle', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/oracle/oracle-original.svg' },
+    { name: 'Power BI', icon: '/assets/icons/power-bi.svg' },
+    { name: 'AWS', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/amazonwebservices/amazonwebservices-original-wordmark.svg' },
+    { name: 'Docker', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg' },
+    { name: 'Git', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg' },
+  ]);
 
   protected readonly currentVariant = computed(
     () => this.data.variants[this.currentProfile()],
@@ -366,6 +384,7 @@ export class App implements AfterViewInit {
 
   constructor() {
     this.currentRoute.set(this.router.url.split('?')[0] || '/');
+    this.currentTheme.set(this.readInitialTheme());
 
     const routerSubscription = this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -427,6 +446,18 @@ export class App implements AfterViewInit {
     this.refreshRevealNodes();
   }
 
+  protected toggleTheme(): void {
+    this.currentTheme.update((theme) => {
+      const nextTheme = theme === 'dark' ? 'light' : 'dark';
+
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('portfolio-theme', nextTheme);
+      }
+
+      return nextTheme;
+    });
+  }
+
   protected selectCategory(category: ProjectCategory): void {
     this.selectedCategory.set(category);
     this.refreshRevealNodes();
@@ -456,10 +487,10 @@ export class App implements AfterViewInit {
 
   protected text(value: string | undefined): string {
     if (!value || this.currentLanguage() === 'ES') {
-      return value ?? '';
+      return this.cleanText(value ?? '');
     }
 
-    return EN_TRANSLATIONS[value] ?? value;
+    return this.cleanText(EN_TRANSLATIONS[value] ?? value);
   }
 
   protected sectionText(section: SectionConfig, key: 'navLabel' | 'kicker'): string {
@@ -481,22 +512,22 @@ export class App implements AfterViewInit {
 
   protected periodText(value: string): string {
     if (this.currentLanguage() === 'ES') {
-      return value;
+      return this.cleanText(value);
     }
 
-    return value.replaceAll('Actualidad', 'Present');
+    return this.cleanText(value.replaceAll('Actualidad', 'Present'));
   }
 
   protected durationText(value: string | undefined): string {
     if (!value || this.currentLanguage() === 'ES') {
-      return value ?? '';
+      return this.cleanText(value ?? '');
     }
 
-    return value
+    return this.cleanText(value
       .replaceAll('En curso', 'In progress')
       .replaceAll('anos academicos', 'academic years')
       .replaceAll('anos', 'years')
-      .replaceAll('meses', 'months');
+      .replaceAll('meses', 'months'));
   }
 
   protected categoryText(category: ProjectCategory): string {
@@ -578,7 +609,7 @@ export class App implements AfterViewInit {
   }
 
   protected onCertificatePointerDown(_event?: PointerEvent): void {
-    this.cursorPressed.set(true);
+    return;
   }
 
   protected onCertificatePointerMove(_event?: PointerEvent): void {
@@ -586,7 +617,11 @@ export class App implements AfterViewInit {
   }
 
   protected onCertificatePointerUp(): void {
-    this.cursorPressed.set(false);
+    return;
+  }
+
+  protected onProfilePhotoError(): void {
+    this.profilePhotoFailed.set(true);
   }
 
   ngAfterViewInit(): void {
@@ -596,13 +631,14 @@ export class App implements AfterViewInit {
           for (const entry of entries) {
             if (entry.isIntersecting) {
               this.renderer.addClass(entry.target, 'is-visible');
-              this.revealObserver?.unobserve(entry.target);
+            } else {
+              this.renderer.removeClass(entry.target, 'is-visible');
             }
           }
         },
         {
-          threshold: 0.18,
-          rootMargin: '0px 0px -10% 0px',
+          threshold: 0.12,
+          rootMargin: '-8% 0px -14% 0px',
         },
       );
     }
@@ -632,38 +668,6 @@ export class App implements AfterViewInit {
     if (window.innerWidth > 720) {
       this.mobileMenuOpen.set(false);
     }
-
-    if (window.innerWidth <= 720) {
-      this.showCursor.set(false);
-    }
-  }
-
-  @HostListener('document:pointermove', ['$event'])
-  protected onPointerMove(event: PointerEvent): void {
-    if (typeof window === 'undefined' || window.innerWidth <= 720) {
-      this.showCursor.set(false);
-      return;
-    }
-
-    this.cursorX.set(event.clientX);
-    this.cursorY.set(event.clientY);
-    this.showCursor.set(true);
-  }
-
-  @HostListener('document:pointerleave')
-  protected onPointerLeave(): void {
-    this.showCursor.set(false);
-    this.cursorPressed.set(false);
-  }
-
-  @HostListener('document:pointerdown')
-  protected onPointerDown(): void {
-    this.cursorPressed.set(true);
-  }
-
-  @HostListener('document:pointerup')
-  protected onPointerUp(): void {
-    this.cursorPressed.set(false);
   }
 
   private matchesProfile(tag: ProfileTag): boolean {
@@ -744,19 +748,59 @@ export class App implements AfterViewInit {
     return Number.isNaN(year) ? null : new Date(year, 0, 1);
   }
 
+  private readInitialTheme(): ThemeMode {
+    if (typeof localStorage === 'undefined') {
+      return 'light';
+    }
+
+    const storedTheme = localStorage.getItem('portfolio-theme');
+    return storedTheme === 'dark' ? 'dark' : 'light';
+  }
+
+  private cleanText(value: string): string {
+    return value
+      .replaceAll('Ã¡', 'á')
+      .replaceAll('Ã©', 'é')
+      .replaceAll('Ã­', 'í')
+      .replaceAll('Ã³', 'ó')
+      .replaceAll('Ãº', 'ú')
+      .replaceAll('Ã±', 'ñ')
+      .replaceAll('Ã', 'Á')
+      .replaceAll('Ã‰', 'É')
+      .replaceAll('Ã', 'Í')
+      .replaceAll('Ã“', 'Ó')
+      .replaceAll('Ãš', 'Ú')
+      .replaceAll('Ã‘', 'Ñ')
+      .replaceAll('â€”', '-')
+      .replaceAll('â€“', '-')
+      .replaceAll('Â·', '·')
+      .replaceAll('Â©', '©')
+      .replaceAll('Â', '');
+  }
+
   private refreshRevealNodes(): void {
     const run = () => {
       const revealNodes = Array.from(
         this.host.nativeElement.querySelectorAll('[data-reveal]'),
       ) as HTMLElement[];
+      const revealGroups = new Map<Element, HTMLElement[]>();
+
+      revealNodes.forEach((node) => {
+        const group = node.parentElement ?? this.host.nativeElement;
+        const nodes = revealGroups.get(group) ?? [];
+        nodes.push(node);
+        revealGroups.set(group, nodes);
+      });
+
+      revealGroups.forEach((nodes) => {
+        nodes.forEach((node, index) => {
+          node.style.setProperty('--reveal-i', String(Math.min(index, 6)));
+        });
+      });
 
       revealNodes.forEach((node: HTMLElement) => {
         if (!this.revealObserver) {
           this.renderer.addClass(node, 'is-visible');
-          return;
-        }
-
-        if (node.classList.contains('is-visible')) {
           return;
         }
 
@@ -766,7 +810,8 @@ export class App implements AfterViewInit {
 
         if (rect.top < viewportHeight * 0.92 && rect.bottom > 0) {
           this.renderer.addClass(node, 'is-visible');
-          return;
+        } else {
+          this.renderer.removeClass(node, 'is-visible');
         }
 
         this.revealObserver.observe(node);

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="SQL Server">
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path
+      d="M111 13c18 46 13 91-14 132-18 28-22 58-10 92 34-25 57-56 68-94 12-42 7-85-17-128Z"
+      stroke="#cfd8dc"
+      stroke-width="8"
+    />
+    <path d="M88 50 146 20M74 88 169 52M68 128l111-35M80 171l104-29M96 210l77-33" stroke="#cfd8dc" stroke-width="5" opacity=".9"/>
+    <path d="M112 13 88 50l50-35M88 50l-14 38 72-68M74 88l-6 40 101-76M68 128l12 43 99-78M80 171l16 39 88-68M96 210l-9 27 86-60" stroke="#cfd8dc" stroke-width="5" opacity=".8"/>
+    <path
+      d="M31 222C65 174 78 135 69 106 63 87 52 73 36 62c62 15 123 28 183 38-34 2-73 18-116 49-26 19-50 43-72 73Z"
+      fill="#c2181a"
+      stroke="#c2181a"
+      stroke-width="3"
+    />
+    <path d="M36 62 83 96l136 4M69 106l42 39 108-45M75 132l65-30M58 166l78-63M103 149l-20-53M103 149l37-47M103 149l14-49M103 149l-45 17M103 149l-72 73" stroke="#fff" stroke-width="5" opacity=".9"/>
+    <path d="M40 219c34-40 71-70 111-91 23-12 45-21 68-28" stroke="#8f1012" stroke-width="5" opacity=".35"/>
+  </g>
+</svg>

@@ -1,0 +1,52 @@
+/* ============================================================
+   SPACING, RADII, SHADOWS, MOTION — Portfolio Design System
+   8px-based spacing rhythm. Restrained shadows (minimal feel).
+   ============================================================ */
+
+:root {
+  /* ---- Spacing scale (8px base) ---- */
+  --space-0:  0;
+  --space-1:  0.25rem;  /* 4 */
+  --space-2:  0.5rem;   /* 8 */
+  --space-3:  0.75rem;  /* 12 */
+  --space-4:  1rem;     /* 16 */
+  --space-5:  1.5rem;   /* 24 */
+  --space-6:  2rem;     /* 32 */
+  --space-7:  3rem;     /* 48 */
+  --space-8:  4rem;     /* 64 */
+  --space-9:  6rem;     /* 96 */
+  --space-10: 8rem;     /* 128 */
+  --space-11: 11rem;    /* 176 — section breathing room */
+
+  /* ---- Layout ---- */
+  --container:     1200px;  /* max content width */
+  --container-narrow: 760px;/* prose / reading width */
+  --gutter:        clamp(1.25rem, 5vw, 4rem); /* @kind spacing */
+  --section-y:     clamp(4rem, 8vw, 8.5rem); /* @kind spacing */
+
+  /* ---- Radii (subtle, not pill-y) ---- */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 999px;
+
+  /* ---- Borders ---- */
+  --bw: 1px; /* @kind spacing */
+  --bw-strong: 1.5px; /* @kind spacing */
+
+  /* ---- Shadows (restrained, cool, low-spread) ---- */
+  --shadow-xs: 0 1px 2px rgba(11, 12, 14, 0.04);
+  --shadow-sm: 0 1px 3px rgba(11, 12, 14, 0.06), 0 1px 2px rgba(11, 12, 14, 0.04);
+  --shadow-md: 0 6px 20px rgba(11, 12, 14, 0.07), 0 2px 6px rgba(11, 12, 14, 0.05);
+  --shadow-lg: 0 18px 48px rgba(11, 12, 14, 0.10), 0 6px 16px rgba(11, 12, 14, 0.06);
+  --shadow-focus: 0 0 0 3px var(--accent-soft); /* @kind shadow */
+
+  /* ---- Motion ---- */
+  --ease-out:   cubic-bezier(0.22, 1, 0.36, 1); /* @kind other */
+  --ease-inout: cubic-bezier(0.65, 0, 0.35, 1); /* @kind other */
+  --dur-fast:   140ms; /* @kind other */
+  --dur-base:   240ms; /* @kind other */
+  --dur-slow:   480ms; /* @kind other */
+}

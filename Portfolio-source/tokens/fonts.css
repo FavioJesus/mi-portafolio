@@ -1,0 +1,13 @@
+/* ============================================================
+   FONTS — Portfolio Design System
+   Display serif: Newsreader (elegant, editorial)
+   Body sans:     Geist (clean, neutral, modern)
+   Mono:          Geist Mono (developer metadata, labels, code)
+
+   NOTE: served from Google Fonts CDN. No binaries are shipped
+   with this system. If you need self-hosted webfonts, drop the
+   .woff2 files in assets/fonts/ and replace this @import with
+   @font-face rules pointing at them.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..700;1,6..72,200..700&family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&display=swap');

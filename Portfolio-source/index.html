@@ -1,0 +1,304 @@
+<!-- @dsCard group="Portfolio" viewport="1280x900" name="Portfolio landing — Favio Guevara" subtitle="Single-page developer portfolio · bilingual · cover + tweakable" -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Favio Guevara — Desarrollador Full Stack</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  html { scroll-behavior: smooth; }
+  section[id] { scroll-margin-top: 84px; }
+  /* Smooth light/dark cross-fade */
+  body { transition: background-color .4s var(--ease-out), color .35s var(--ease-out); }
+  main section, header { transition: background-color .4s var(--ease-out), border-color .4s var(--ease-out); }
+  /* Dark backdrop on the root so there's never a white flash behind transparent areas */
+  html[data-theme="dark"] { background-color: #0F1115; }
+  html { transition: background-color .4s var(--ease-out); }
+  .hero-split { display: grid; grid-template-columns: 1.08fr 0.92fr; gap: var(--space-8); align-items: center; }
+  .about-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: var(--space-8); align-items: start; }
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: var(--space-5); }
+  .facts-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-5); }
+  @media (max-width: 920px) {
+    .hero-split, .about-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none !important; }
+  }
+  @media (max-width: 560px) {
+    .facts-grid { grid-template-columns: 1fr; }
+    .nav-cv { display: none !important; }
+  }
+  image-slot { background: var(--surface-sunken); }
+
+  /* Reveal wrapper keeps cards equal-height in the grid while owning the entrance animation */
+  .reveal-cell { display: flex; }
+  .reveal-cell > * { flex: 1 1 auto; width: 100%; }
+
+  /* ---- Cover banner (image header) ---- */
+  .cover-sec { position: relative; width: 100%; height: clamp(220px, 30vw, 360px); overflow: hidden; background: var(--surface-sunken); border-bottom: 1px solid var(--border); }
+  .cover-sec::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, transparent 60%, rgba(8,12,28,0.45)); }
+  .cover-tag { position: absolute; right: clamp(1rem, 4vw, 2.5rem); bottom: clamp(0.9rem, 3vw, 1.4rem); z-index: 2; font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: var(--ls-wide); color: #fff; background: rgba(8,12,28,0.55); backdrop-filter: blur(4px); padding: 0.35rem 0.7rem; border-radius: var(--radius-full); pointer-events: none; }
+
+  /* ---- About two-column (text + code window) ---- */
+  .about-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); align-items: start; }
+  @media (max-width: 920px) { .about-grid2 { grid-template-columns: 1fr; } }
+
+  /* ---- Hero stats ---- */
+  .stats { display: flex; flex-wrap: wrap; gap: var(--space-7); margin-top: var(--space-2); }
+  .stat { display: flex; flex-direction: column; gap: 0.2rem; }
+  .stat-n { font-family: var(--font-serif); font-size: clamp(1.8rem, 1.2rem + 1.5vw, 2.6rem); color: var(--accent); line-height: 1; }
+  .stat-l { font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: var(--ls-wide); color: var(--text-muted); max-width: 22ch; }
+
+  /* ---- Generated dev / big-data visual (hero) ---- */
+  .dev-window { width: 100%; min-width: 0; border-radius: var(--radius-lg); overflow: hidden; background: #0E1117; border: 1px solid #20242C; box-shadow: var(--shadow-lg); font-family: var(--font-mono); }
+  .dev-bar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: #151A22; border-bottom: 1px solid #20242C; }
+  .dev-dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dev-dot:nth-child(1){ background:#ED6A5E; } .dev-dot:nth-child(2){ background:#F4BF4F; } .dev-dot:nth-child(3){ background:#61C554; }
+  .dev-tab { margin-left: 10px; font-size: 12px; color: #C7CDD9; }
+  .dev-langtag { margin-left: auto; font-size: 10px; letter-spacing: .12em; color: var(--invert-accent); background: color-mix(in srgb, var(--invert-accent) 16%, transparent); padding: 3px 8px; border-radius: 5px; }
+  .dev-code { margin: 0; padding: 20px 22px; font-size: clamp(12px, 1.05vw, 14px); line-height: 1.85; color: #C7CDD9; white-space: pre; overflow-x: auto; }
+  .dev-code .c { color: #5B6472; font-style: italic; }
+  .dev-code .k { color: var(--invert-accent); }
+  .dev-code .s { color: #8FD98A; }
+  .dev-code .fn { color: #E6B25A; }
+  .dev-caret { color: var(--invert-accent); animation: devblink 1.1s steps(2) infinite; }
+  @keyframes devblink { 0%,50%{opacity:1} 50.01%,100%{opacity:0} }
+  .dev-panel { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding: 14px 22px 18px; border-top: 1px solid #20242C; background: #0B0E13; }
+  .dev-bars { display: flex; align-items: flex-end; gap: 5px; height: 38px; }
+  .dev-bars span { width: 9px; border-radius: 2px 2px 0 0; background: color-mix(in srgb, var(--invert-accent) 70%, #2A3140); }
+  .dev-status { display: inline-flex; align-items: center; gap: 7px; font-size: 11px; color: #8B93A1; white-space: nowrap; }
+  .dev-pulse { width: 7px; height: 7px; border-radius: 50%; background: #61C554; animation: devpulse 1.8s ease-out infinite; }
+  @keyframes devpulse { 0%{box-shadow:0 0 0 0 rgba(97,197,84,.45)} 100%{box-shadow:0 0 0 7px rgba(97,197,84,0)} }
+
+  /* ---- Tech marquee ---- */
+  .marquee { position: relative; width: 100%; overflow: hidden; padding-bottom: var(--section-y);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
+  .marquee-track { display: flex; gap: var(--space-4); width: max-content; animation: marquee 38s linear infinite; }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+  .tech-chip { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.7rem 1.15rem; border: 1px solid var(--border); border-radius: var(--radius-full); background: var(--surface); white-space: nowrap; }
+  .tech-chip img { width: 26px; height: 26px; object-fit: contain; }
+  .tech-chip span { font-family: var(--font-mono); font-size: var(--fs-sm); color: var(--text-body); letter-spacing: var(--ls-wide); }
+
+  /* ---- Scroll reveal transitions (cinematic fade / lift / de-blur) ---- */
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(38px) scale(0.984);
+      filter: blur(7px);
+      transition:
+        opacity 0.95s var(--ease-out),
+        transform 1.05s var(--ease-out),
+        filter 0.9s var(--ease-out);
+      transition-delay: calc(var(--reveal-i, 0) * 0.085s);
+      will-change: opacity, transform, filter;
+    }
+    [data-reveal].is-visible {
+      opacity: 1;
+      transform: none;
+      filter: blur(0);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .stats { gap: var(--space-5); }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<template id="__bundler_thumbnail">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+    <rect width="100" height="100" fill="#0B0C0E"/>
+    <text x="50" y="60" font-family="Georgia, serif" font-size="34" fill="#F4F5F7" text-anchor="middle">FG</text>
+  </svg>
+</template>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="ui_kits/portfolio/image-slot.js"></script>
+<script src="ui_kits/portfolio/data.js"></script>
+<script type="text/babel" src="ui_kits/portfolio/tweaks-panel.jsx"></script>
+<script type="text/babel" src="ui_kits/portfolio/primitives.jsx"></script>
+<script type="text/babel" src="ui_kits/portfolio/sections.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+(function () {
+  const { useTweaks, TweaksPanel, TweakSection, TweakColor, TweakRadio, TweakToggle, TweakSelect } = window;
+
+  const ACCENTS = {
+    "#1A56DB": { hover: "#1546B8", soft: "#E8EEFC", ink: "#0F317E", invert: "#6E92FF" }, // Cobalto
+    "#0E7C5A": { hover: "#0B6248", soft: "#DFF3EC", ink: "#094736", invert: "#4FD1A5" }, // Esmeralda
+    "#B8770A": { hover: "#9A6309", soft: "#FBF1DC", ink: "#6E4705", invert: "#E6B450" }, // Ámbar
+    "#C0362C": { hover: "#A12A22", soft: "#FBE9E7", ink: "#7A1F19", invert: "#F08A82" }, // Carmesí
+  };
+  const SURFACES = {
+    light: { paper: "#FFFFFF", p2: "#F7F8FA", p3: "#EEF0F3", line: "#E4E6EB", lineS: "#D2D5DC" },
+    warm:  { paper: "#FCFAF6", p2: "#F5F1E9", p3: "#ECE6DA", line: "#E8E1D4", lineS: "#D8D0BF" },
+  };
+
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "accent": "#1A56DB",
+    "heroLayout": "split",
+    "surface": "light",
+    "showPhoto": true
+  }/*EDITMODE-END*/;
+
+  function App() {
+    const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+    const D = window.PORTFOLIO_DATA;
+
+    const [lang, setLang] = React.useState(() => localStorage.getItem("pf-lang") || "es");
+    React.useEffect(() => { localStorage.setItem("pf-lang", lang); document.documentElement.lang = lang; }, [lang]);
+    const tr = D[lang];
+
+    const [theme, setTheme] = React.useState(() => localStorage.getItem("pf-theme") || "light");
+    React.useEffect(() => { localStorage.setItem("pf-theme", theme); }, [theme]);
+
+    // Apply accent + surface + theme to CSS custom properties
+    React.useEffect(() => {
+      const r = document.documentElement.style;
+      const a = ACCENTS[t.accent] || ACCENTS["#1A56DB"];
+      const dark = theme === "dark";
+      document.documentElement.setAttribute("data-theme", theme);
+
+      if (dark) {
+        // Accent lifted for legibility on dark surfaces
+        r.setProperty("--accent", a.invert);
+        r.setProperty("--accent-hover", a.invert);
+        r.setProperty("--accent-soft", "color-mix(in srgb, " + a.invert + " 20%, transparent)");
+        r.setProperty("--accent-ink", a.invert);
+        r.setProperty("--invert-accent", a.invert);
+        r.setProperty("--text-on-accent", "#0B0C0E");
+        // Dark surfaces (cool, or warm-tinted to match the surface tweak)
+        const ds = t.surface === "warm"
+          ? { paper: "#14110B", p2: "#1B1712", p3: "#231E17", line: "#2E2820", lineS: "#41392D" }
+          : { paper: "#0F1115", p2: "#161A20", p3: "#1C212A", line: "#272C35", lineS: "#3A414C" };
+        r.setProperty("--paper", ds.paper);
+        r.setProperty("--paper-2", ds.p2);
+        r.setProperty("--paper-3", ds.p3);
+        r.setProperty("--line", ds.line);
+        r.setProperty("--line-strong", ds.lineS);
+        // Light text on dark
+        r.setProperty("--text-strong", "#F4F5F7");
+        r.setProperty("--text-body", "#D4D8DF");
+        r.setProperty("--text-muted", "#9AA0AB");
+        r.setProperty("--text-faint", "#757B86");
+        // Keep dark "chips" (logo square, lang toggle, dark button) readable on dark
+        r.setProperty("--ink-950", "#2A2F38");
+        r.setProperty("--ink-800", "#353B45");
+        // Footer block sits a touch raised from the page
+        r.setProperty("--invert-bg", ds.p2);
+        r.setProperty("--invert-bg-2", ds.p3);
+      } else {
+        r.setProperty("--accent", t.accent);
+        r.setProperty("--accent-hover", a.hover);
+        r.setProperty("--accent-soft", a.soft);
+        r.setProperty("--accent-ink", a.ink);
+        r.setProperty("--invert-accent", a.invert);
+        r.setProperty("--text-on-accent", "#FFFFFF");
+        const s = SURFACES[t.surface] || SURFACES.light;
+        r.setProperty("--paper", s.paper);
+        r.setProperty("--paper-2", s.p2);
+        r.setProperty("--paper-3", s.p3);
+        r.setProperty("--line", s.line);
+        r.setProperty("--line-strong", s.lineS);
+        r.setProperty("--text-strong", "var(--ink-950)");
+        r.setProperty("--text-body", "var(--ink-800)");
+        r.setProperty("--text-muted", "var(--ink-500)");
+        r.setProperty("--text-faint", "var(--ink-400)");
+        r.setProperty("--ink-950", "#0B0C0E");
+        r.setProperty("--ink-800", "#1E2026");
+        r.setProperty("--invert-bg", "#0B0C0E");
+        r.setProperty("--invert-bg-2", "#15171C");
+      }
+    }, [t.accent, t.surface, theme]);
+
+    // Cinematic scroll reveal: content fades + lifts + sharpens as it enters the
+    // viewport band, and gently re-arms when it leaves — so sections breathe as you
+    // pass through. Position-based (works in every browser + embedded viewers);
+    // rAF-throttled on scroll with a low-frequency interval safety net. Children
+    // stagger via a --reveal-i index set per parent group.
+    React.useEffect(() => {
+      const els = Array.from(document.querySelectorAll("[data-reveal]"));
+      if (!els.length) return;
+
+      const groups = new Map();
+      els.forEach((el) => {
+        const p = el.parentElement || document.body;
+        const arr = groups.get(p) || [];
+        arr.push(el);
+        groups.set(p, arr);
+      });
+      groups.forEach((arr) => arr.forEach((el, i) => {
+        el.style.setProperty("--reveal-i", String(arr.length > 1 ? Math.min(i, 6) : 0));
+      }));
+
+      let ticking = false;
+      const apply = () => {
+        ticking = false;
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        for (let i = 0; i < els.length; i++) {
+          const el = els[i];
+          const r = el.getBoundingClientRect();
+          // Visible band: entered from the bottom (top above 86% line) and not yet
+          // scrolled off the top (bottom still below the 8% line).
+          const inBand = r.top < vh * 0.86 && r.bottom > vh * 0.08;
+          if (inBand) el.classList.add("is-visible");
+          else el.classList.remove("is-visible");
+        }
+      };
+      const onScroll = () => { if (!ticking) { ticking = true; window.requestAnimationFrame(apply); } };
+
+      apply();
+      window.addEventListener("scroll", onScroll, { passive: true });
+      window.addEventListener("resize", onScroll);
+      const iv = setInterval(apply, 300); // safety net where scroll events are throttled
+      return () => {
+        window.removeEventListener("scroll", onScroll);
+        window.removeEventListener("resize", onScroll);
+        clearInterval(iv);
+      };
+    }, [lang, t.heroLayout, t.showPhoto]);
+
+    return (
+      <React.Fragment>
+        <Nav t={tr} lang={lang} setLang={setLang} data={D} theme={theme} setTheme={setTheme} />
+        <main>
+          <Cover data={D} />
+          <Hero t={tr} data={D} heroLayout={t.heroLayout} showPhoto={t.showPhoto} />
+          <About t={tr} />
+          <TechCarousel lang={lang} />
+          <Education t={tr} />
+          <Languages t={tr} />
+          <Work t={tr} />
+          <Research t={tr} />
+          <Experience t={tr} />
+          <Contact t={tr} data={D} />
+        </main>
+
+        <TweaksPanel title="Tweaks">
+          <TweakSection label={lang === "es" ? "Color de acento" : "Accent color"} />
+          <TweakColor label={lang === "es" ? "Acento" : "Accent"} value={t.accent}
+            options={Object.keys(ACCENTS)} onChange={(v) => setTweak("accent", v)} />
+          <TweakSection label={lang === "es" ? "Diseño" : "Layout"} />
+          <TweakSelect label={lang === "es" ? "Portada" : "Hero"} value={t.heroLayout}
+            options={["split", "stacked", "minimal"]} onChange={(v) => setTweak("heroLayout", v)} />
+          <TweakToggle label={lang === "es" ? "Mostrar foto" : "Show photo"} value={t.showPhoto}
+            onChange={(v) => setTweak("showPhoto", v)} />
+          <TweakSection label={lang === "es" ? "Superficie" : "Surface"} />
+          <TweakRadio label={lang === "es" ? "Fondo" : "Background"} value={t.surface}
+            options={["light", "warm"]} onChange={(v) => setTweak("surface", v)} />
+        </TweaksPanel>
+      </React.Fragment>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+})();
+</script>
+</body>
+</html>
